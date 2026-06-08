@@ -368,7 +368,7 @@ function printWelcome(){
     const aboutLines=[
       {text:'  I break things for a living — then write about why they were broken.',color:'var(--text)',delay:0},
       {text:'  Web apps, APIs, auth flows, logic flaws. Manual > automated, always.',color:'var(--text2)',delay:180},
-      {text:'  CVSS 9.8 on deck. NASA Hall of Fame. Still hungry.',color:'var(--cyan)',delay:360},
+      {text:'  CVSS 9.8 on deck. Government Acknowledged. Always Learning.',color:'var(--cyan)',delay:360},
     ];
     aboutLines.forEach(({text,color,delay})=>{
       setTimeout(()=>{
@@ -399,8 +399,8 @@ function printWelcome(){
     b();
 
     const interests=[
-      {icon:'⛰',label:'Trekking',desc:'Somewhere in the mountains, offline.',col:'var(--green)'},
-      {icon:'🎸',label:'Guitar',desc:'Self-taught. Blues & fingerstyle.',col:'var(--yellow)'},
+      {icon:'⛰',label:'Trekking',desc:'Somewhere in the Himalayans, offline.',col:'var(--green)'},
+      {icon:'🎸',label:'Guitar',desc:'Self-taught. Blues & Classic Rock.',col:'var(--yellow)'},
       {icon:'⚽',label:'Football',desc:'Centre-mid. Reads the game.',col:'var(--blue)'},
       {icon:'🌍',label:'Outside the screen',desc:'Humans > terminals. Sometimes.',col:'var(--pink)'},
     ];
@@ -540,7 +540,7 @@ whoami(){
   kv('Title','Penetration Tester / Security Researcher','out-bl');
   kv('Location','Newcastle, NSW, Australia','out-tx');
   kv('Focus','Web App · API · Authentication · Logic Flaws','out-pk');
-  kv('Platforms','YesWeHack · Bugcrowd · NASA VDP','out-pu');
+  kv('Platforms','YesWeHack · Bugcrowd','out-pu');
   kv('Status','Available for engagements','out-gr');
   b();
   row('out-pk','  +-- ENGAGEMENT METHODOLOGY -----------------------------------------+');
@@ -652,13 +652,13 @@ stats(){
   row('out-pk','  +-- BUG BOUNTY STATISTICS -------------------------------------------+');
   b();
   const stats=[
-    ['Total Submissions','24','out-tx'],
-    ['Accepted Findings','14','out-bl'],
+    ['Total Submissions','100+','out-tx'],
+    ['Accepted Findings','71+','out-bl'],
     ['In Triage','1  (CVSS 9.8 Critical -- SQLi Auth Bypass)','out-cy'],
     ['Duplicate / N/A','9','out-mu'],
     ['Highest CVSS','9.8 -- CMS SQLi Auth Bypass (Critical)','out-re'],
-    ['Platforms','YesWeHack · Bugcrowd · NASA VDP','out-pu'],
-    ['Hall of Fame','NASA · YesWeHack','out-ye'],
+    ['Platforms','YesWeHack · Bugcrowd','out-pu'],
+    ['Hall of Fame','Gov.in','out-ye'],
   ];
   stats.forEach(([k,v,c])=>kv(k,v,c));
   b();
@@ -708,11 +708,8 @@ contact(){
   row('out-pk','  +-- CONTACT & LINKS -------------------------------------------------+');
   b();
   const links=[
-    ['Email','avyash@email.com','mailto:avyash@email.com','pk'],
-    ['LinkedIn','linkedin.com/in/avyash-rayamajhi','https://linkedin.com/in/avyash-rayamajhi','bl'],
-    ['GitHub','github.com/avyash','https://github.com/avyash','pu'],
-    ['Bugcrowd','bugcrowd.com/Avyash_Rayamajhi','https://bugcrowd.com/Avyash_Rayamajhi','ye'],
-    ['YesWeHack','yeswehack.com/hunters/avyash','#','bl'],
+    ['Email','rayamajhi.avyash@gmail.com','mailto:rayamajhi.avyash@gmail.com','pk'],
+    ['LinkedIn','linkedin.com/in/avyash-rayamajhi','https://www.linkedin.com/in/avyash-rayamajhi/','bl'],
   ];
   links.forEach(([label,display,href,col])=>{
     const el=document.createElement('span');
@@ -856,11 +853,10 @@ about(){
    'paths, and business logic vulnerabilities.',
    '',
    'I have worked across financial services, insurance, e-commerce, and government',
-   "targets on YesWeHack, Bugcrowd, and NASA's VDP. Accepted findings include IDOR",
+ "targets on YesWeHack, Bugcrowd, and NASA's VDP. Accepted findings include SQL Injection, XSS, IDOR",
    'chains, CORS+IDOR combinations, CSRF via cache poisoning, and unauthenticated API',
-   'enumeration at scale.',
    '',
-   'Currently expanding toward blue-team and analyst roles, bridging offensive background',
+   'Currently exploring toward blue-team as well and analyst roles, bridging offensive background',
    'with developing defensive skills (SIEM, endpoint telemetry, ASD Essential Eight).',
   ].forEach(l=>{if(!l)b();else row('out-t2','  '+l);});
   b();
