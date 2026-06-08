@@ -820,7 +820,7 @@ sudo(){
       setTimeout(()=>{
         row('out-re','  sudo: 3 incorrect password attempts');
         b();
-        row('out-mu',"  Nice try. You don't need root to Hire Me.");
+        row('out-mu',"  Nice try. You don't need root to Hire Me ;)");
         b();scrollBot();
       },1200);
     },1000);
@@ -888,6 +888,89 @@ report_bolttech_idor1(){
   row('out-t2','  Implement object-level authorisation before returning policy data.');
   row('out-t2','  Verify user_id from JWT matches policy owner_id in the database.');b();
   row('out-pk','  +--------------------------------------------------------------------+');b();
+},
+    report_nciipc(){
+  b();
+  // Dramatic classified-doc header
+  const hdrEl=document.createElement('span');hdrEl.className='out';
+  hdrEl.innerHTML='  <span style="color:var(--yellow);letter-spacing:0.3em;font-size:11px;text-shadow:0 0 15px rgba(255,230,109,0.6)">⚠  GOVERNMENT DISCLOSURE — ACKNOWLEDGED  ⚠</span>';
+  out.appendChild(hdrEl);b();
+  row('out-di','  ════════════════════════════════════════════════════════════════════');b();
+  // Stamp effect
+  const stampEl=document.createElement('div');
+  stampEl.style.cssText='padding:0 2rem;margin-bottom:0.5rem;display:flex;align-items:center;gap:1.5rem';
+  stampEl.innerHTML=
+    '<div style="border:2px solid var(--yellow);padding:0.4rem 0.9rem;color:var(--yellow);font-size:10px;font-weight:700;letter-spacing:0.2em;text-shadow:0 0 12px rgba(255,230,109,0.5);transform:rotate(-2deg);box-shadow:0 0 20px rgba(255,230,109,0.15)">ACKNOWLEDGED</div>'+
+    '<div style="border:2px solid var(--green);padding:0.4rem 0.9rem;color:var(--green);font-size:10px;font-weight:700;letter-spacing:0.2em;text-shadow:0 0 12px rgba(57,255,142,0.5);transform:rotate(1deg);box-shadow:0 0 20px rgba(57,255,142,0.15)">INDIA GOV &middot; NCIIPC</div>'+
+    '<div style="border:2px solid var(--blue);padding:0.4rem 0.9rem;color:var(--blue);font-size:10px;font-weight:700;letter-spacing:0.2em;text-shadow:0 0 12px rgba(0,212,255,0.5);transform:rotate(-1deg);box-shadow:0 0 20px rgba(0,212,255,0.15)">SEPT 2023</div>';
+  out.appendChild(stampEl);b();
+  row('out-di','  ════════════════════════════════════════════════════════════════════');b();
+ 
+  [['Report ID','NCIIPC-RVDP-2023-001','out-t2'],
+   ['Severity','HIGH — Time-Based Blind SQL Injection','out-pk'],
+   ['Status','ACKNOWLEDGED by NCIIPC RVDP (India Gov)','out-gr'],
+   ['Programme','NCIIPC Responsible Vulnerability Disclosure Programme','out-bl'],
+   ['Target','bstbpc.gov.in — Government of India','out-ye'],
+   ['Endpoint','/Books.aspx?class=Class%2011&subject=[INJECTABLE]','out-t2'],
+   ['Type','Time-Based Blind SQLi','out-pk'],
+   ['Date','September 2023','out-t2'],
+  ].forEach(([k,v,c])=>kv(k,v,c));b();
+ 
+  row('out-bl','  CONTEXT');b();
+  row('out-t2','  bstbpc.gov.in is a Government of India educational portal. The Books.aspx');
+  row('out-t2','  endpoint accepted user-supplied parameters without sanitisation, enabling');
+  row('out-t2','  time-based blind SQL injection — a technique that leaks data through');
+  row('out-t2','  deliberate response delays rather than verbose error output.');b();
+ 
+  row('out-bl','  ATTACK TECHNIQUE — TIME-BASED BLIND');b();
+  ['The subject parameter was appended directly into a SQL query with no parameterisation.',
+   'A crafted payload using IF(condition, SLEEP(N), 0) caused the server to delay',
+   'its response by N seconds when the injected condition evaluated TRUE.',
+   'By varying the condition (character comparison, length checks), data was',
+   'extracted one bit at a time via the timing oracle — no database error needed.',
+  ].forEach(l=>row('out-t2','  '+l));b();
+ 
+  row('out-bl','  PROOF OF CONCEPT');b();
+  row('out-di','  +-- Affected URL ------------------------------------------------');
+  row('out-gr',"  http://bstbpc.gov.in/Books.aspx?class=Class%2011&subject=12345'");
+  row('out-di','  +-- Ghauri Injection Payload ------------------------------------');
+  row('out-gr',"  subject=12345' AND IF(1=1,SLEEP(5),0)-- -");
+  row('out-mu','  -- Response delayed 5 seconds: condition TRUE → injectable');
+  row('out-gr',"  subject=12345' AND IF(1=2,SLEEP(5),0)-- -");
+  row('out-mu','  -- Response immediate: condition FALSE → timing oracle confirmed');
+  row('out-di','  +-----------------------------------------------------------------');b();
+ 
+  row('out-bl','  IMPACT');b();
+  [['Data Extraction','Entire database contents extractable via timing oracle'],
+   ['DoS Potential','SLEEP() payloads exhaust DB thread pool — application denial'],
+   ['Government Data','Educational records, admin credentials, internal configs at risk'],
+  ].forEach(([k,v])=>{
+    const el=document.createElement('span');el.className='out';
+    el.innerHTML='  <span style="color:var(--pink);display:inline-block;width:180px">'+k+'</span><span style="color:var(--text2)">'+v+'</span>';
+    out.appendChild(el);
+  });b();
+ 
+  // The acknowledgement letter block — the hero piece
+  row('out-ye','  OFFICIAL GOVERNMENT ACKNOWLEDGEMENT');b();
+  const letterEl=document.createElement('div');
+  letterEl.style.cssText='margin:0 2rem;border:1px solid rgba(255,230,109,0.25);background:rgba(255,230,109,0.03);padding:1rem 1.2rem;position:relative';
+  letterEl.innerHTML=
+    '<div style="position:absolute;top:-1px;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--yellow),transparent)"></div>'+
+    '<div style="font-size:10px;color:var(--muted);letter-spacing:0.1em;margin-bottom:0.6rem">FROM: NCIIPC RVDP &lt;rvdp@nciipc.gov.in&gt; &nbsp;·&nbsp; Mon, 4 Sept 2023, 21:54</div>'+
+    '<div style="color:var(--text);font-size:12px;line-height:1.8;border-left:2px solid var(--yellow);padding-left:0.8rem">'+
+    '<div style="margin-bottom:0.4rem"><span style="color:var(--yellow)">1.</span> We acknowledge the issue reported by you.</div>'+
+    '<div style="margin-bottom:0.4rem"><span style="color:var(--yellow)">2.</span> NCIIPC is the National Nodal Agency for Critical Information Infrastructure (CII) Protection.</div>'+
+    '<div style="margin-bottom:0.4rem"><span style="color:var(--yellow)">3.</span> The inputs after verification would be shared with the concerned agencies for remediation.</div>'+
+    '<div><span style="color:var(--yellow)">4.</span> We look forward to your continued contribution.</div>'+
+    '</div>'+
+    '<div style="margin-top:0.8rem;font-size:11px;color:var(--yellow);font-weight:700">Thanks &amp; Regards<br>Team RVDP, NCIIPC</div>'+
+    '<div style="position:absolute;bottom:-1px;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--yellow),transparent)"></div>';
+  out.appendChild(letterEl);b();
+ 
+  row('out-t2','  NOTE: This was an early independent disclosure — September 2023, pre-platform.');
+  row('out-t2',"  Submitted directly to India's national CII protection body via RVDP.");
+  row('out-t2','  Demonstrates responsible disclosure instincts from the very start.');b();
+  row('out-di','  ════════════════════════════════════════════════════════════════════');b();
 },
 report_bolttech_idor2(){
   b();row('out-pk','  +-- VULNERABILITY REPORT ------------------------------------------+');b();
