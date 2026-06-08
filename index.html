@@ -284,9 +284,8 @@ function printWelcome(){
       if(frame>=total){clearInterval(iv);el.innerHTML='<span style="color:'+color+';text-shadow:0 0 20px '+color+'80">'+finalText+'</span>';if(cb)cb();}
     },40);
   }
-//game
-  bash
 
+  //game
 cat > /home/claude/game_inject.py << 'PYEOF'
 import sys
 
@@ -797,11 +796,8 @@ window.toggleGame=function(){
 
 # ── INJECT ────────────────────────────────────────────────────────────────
 
-# 1. Inject CSS before </style>
 src = src.replace('</style>', GAME_CSS + '\n</style>', 1)
 
-# 2. Add game toggle button to title bar (after readme-btn or before tb-badge)
-# Find the tb-badge div and insert before it
 GAME_BTN = '\n    <button class="tb-game-btn" id="game-btn" onclick="toggleGame()">&#9654; HACK</button>'
 src = src.replace(
     '<div class="tb-badge">',
@@ -809,8 +805,6 @@ src = src.replace(
     1
 )
 
-# 3. Inject game panel HTML — after the readme-overlay closing div (before output div)
-# or if readme-overlay not present, before the output div
 GAME_PANEL_ANCHOR = '<div id="output">'
 if GAME_PANEL_ANCHOR in src:
     src = src.replace(GAME_PANEL_ANCHOR, GAME_HTML + '\n  ' + GAME_PANEL_ANCHOR, 1)
