@@ -3,1357 +3,734 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>avyash@pentest:~$</title>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<title>Avyash Rayamajhi — Offensive Security</title>
+<meta name="description" content="Avyash Rayamajhi — Penetration Tester & Bug Bounty Hunter. Web, API, network and mobile offensive security.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#06060f;--bg2:#0a0a1a;--bg3:#0e0e22;--border:rgba(255,255,255,0.06);
-  --pink:#ff2d78;--pink-dim:rgba(255,45,120,0.15);--pink-glow:rgba(255,45,120,0.4);
-  --blue:#00d4ff;--blue-dim:rgba(0,212,255,0.12);--blue-glow:rgba(0,212,255,0.4);
-  --purple:#b44dff;--purple-dim:rgba(180,77,255,0.12);
-  --yellow:#ffe66d;--green:#39ff8e;--red:#ff4566;--cyan:#00ffe5;
-  --muted:#3a3a5c;--dim:#1e1e38;--text:#d0d8f0;--text2:#6e7a9e;
-}
-html,body{height:100%;background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.6;overflow:hidden}
-body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,20,0.04) 2px,rgba(0,0,20,0.04) 4px);pointer-events:none;z-index:9999;animation:scanmove 8s linear infinite}
-@keyframes scanmove{0%{background-position:0 0}100%{background-position:0 100%}}
-body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at center,transparent 60%,rgba(0,0,10,0.7) 100%);pointer-events:none;z-index:9998}
-#boot{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;justify-content:center;align-items:center;z-index:1000;transition:opacity 0.8s ease}
-.boot-logo{font-size:clamp(2rem,5vw,3.5rem);font-weight:700;letter-spacing:-0.02em;margin-bottom:0.5rem}
-.boot-logo-av{color:var(--blue);text-shadow:0 0 30px var(--blue-glow),0 0 60px rgba(0,212,255,0.2)}
-.boot-logo-yash{color:var(--pink);text-shadow:0 0 30px var(--pink-glow),0 0 60px rgba(255,45,120,0.2)}
-.boot-sub{font-size:11px;color:var(--muted);letter-spacing:0.35em;text-transform:uppercase;margin-bottom:3rem}
-.boot-progress-wrap{width:min(420px,80vw);height:1px;background:var(--dim);position:relative;overflow:visible;margin-bottom:1rem}
-.boot-progress-bar{height:100%;background:linear-gradient(90deg,var(--blue),var(--pink));width:0%;transition:width 0.15s linear;box-shadow:0 0 12px var(--blue-glow),0 0 24px var(--pink-glow);position:relative}
-.boot-progress-bar::after{content:'';position:absolute;right:0;top:-2px;width:4px;height:5px;background:#fff;border-radius:2px;box-shadow:0 0 8px #fff}
-.boot-status{font-size:11px;color:var(--text2);text-align:center;min-height:1.4em;letter-spacing:0.05em}
-.boot-log{margin-top:1.5rem;width:min(420px,80vw);max-height:100px;overflow:hidden}
-.boot-log-line{font-size:10px;color:var(--muted);margin-bottom:1px}
-#shell{height:100vh;display:flex;flex-direction:column;opacity:0;transition:opacity 0.6s ease}
-.title-bar{background:var(--bg3);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0.55rem 1rem;gap:0.75rem;flex-shrink:0;position:relative;overflow:hidden}
-.title-bar::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--blue),var(--pink),transparent);opacity:0.6}
-.tb-dots{display:flex;gap:6px}
-.tb-dot{width:12px;height:12px;border-radius:50%;cursor:pointer;transition:filter 0.2s}
-.tb-dot:hover{filter:brightness(1.3)}
-.tb-dot-r{background:#ff5f56}.tb-dot-y{background:#ffbd2e}.tb-dot-g{background:#27c93f}
-.tb-title{flex:1;text-align:center;font-size:11px;color:var(--muted);letter-spacing:0.1em}
-.tb-badge{font-size:10px;color:var(--blue);border:1px solid rgba(0,212,255,0.3);padding:0.2rem 0.6rem;letter-spacing:0.08em;text-shadow:0 0 8px var(--blue-glow)}
-#output{flex:1;overflow-y:auto;padding:1.5rem 2rem;scroll-behavior:smooth}
-#output::-webkit-scrollbar{width:3px}
-#output::-webkit-scrollbar-track{background:transparent}
-#output::-webkit-scrollbar-thumb{background:var(--dim);border-radius:2px}
-.input-row{display:flex;align-items:center;padding:0.7rem 2rem;border-top:1px solid var(--border);background:var(--bg2);flex-shrink:0;gap:0;position:relative}
-.input-row::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--pink),var(--blue),transparent);opacity:0.4}
-.prompt-text{white-space:nowrap;flex-shrink:0;margin-right:0.5rem;user-select:none}
-.prompt-user{color:var(--pink);font-weight:700;text-shadow:0 0 10px var(--pink-glow)}
-.prompt-at{color:var(--muted)}.prompt-host{color:var(--blue);text-shadow:0 0 8px var(--blue-glow)}
-.prompt-colon{color:var(--muted)}.prompt-path{color:var(--purple)}.prompt-dollar{color:var(--pink);margin-left:0.25rem}
-#cmd-input{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:13px;caret-color:var(--pink)}
+  :root{
+    --bg:#0a0e16; --bg-soft:#0c1119; --surface:#121a28; --surface-2:#19243a;
+    --border:#22304a; --border-soft:#1a2538;
+    --text:#d8e0ee; --text-dim:#8b99af; --text-faint:#5a6a82;
+    --accent:#ff5a30; --accent-2:#33d6c2;
+    --crit:#f0494f; --high:#ff7a45; --med:#f4b352; --low:#4aa8ff; --info:#8b99af;
+    --maxw:1080px; --r:10px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;line-height:1.6;font-size:16px;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(900px 500px at 80% -10%, rgba(255,90,48,.10), transparent 60%),
+      radial-gradient(700px 500px at -10% 20%, rgba(51,214,194,.07), transparent 60%),
+      linear-gradient(var(--border-soft) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border-soft) 1px, transparent 1px);
+    background-size:auto, auto, 46px 46px, 46px 46px;opacity:.5;
+    mask-image:linear-gradient(180deg,#000 0%,#000 60%,transparent 100%)}
+  a{color:inherit;text-decoration:none}
+  ::selection{background:var(--accent);color:#0a0e16}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;position:relative;z-index:1}
 
-/* README PANEL */
-#readme-panel{position:fixed;top:0;right:0;width:min(420px,92vw);height:100vh;background:var(--bg2);border-left:1px solid var(--border);z-index:500;display:flex;flex-direction:column;transform:translateX(100%);transition:transform 0.35s cubic-bezier(.4,0,.2,1);box-shadow:-20px 0 60px rgba(0,0,0,0.6)}
-#readme-panel.open{transform:translateX(0)}
-#readme-panel::before{content:"";position:absolute;top:0;left:0;bottom:0;width:1px;background:linear-gradient(180deg,var(--pink),var(--blue));opacity:0.7}
-.readme-header{display:flex;align-items:center;justify-content:space-between;padding:0.8rem 1.2rem;border-bottom:1px solid var(--border);flex-shrink:0;background:var(--bg3)}
-.readme-header-title{font-size:11px;color:var(--blue);letter-spacing:0.15em;text-shadow:0 0 8px var(--blue-glow)}
-.readme-close{background:none;border:1px solid var(--border);color:var(--muted);font-family:"JetBrains Mono",monospace;font-size:11px;padding:0.2rem 0.6rem;cursor:pointer;transition:all 0.2s;letter-spacing:0.05em}
-.readme-close:hover{color:var(--pink);border-color:var(--pink);text-shadow:0 0 8px var(--pink-glow)}
-.readme-body{flex:1;overflow-y:auto;padding:1.4rem 1.4rem;font-size:12px;line-height:1.8}
-.readme-body::-webkit-scrollbar{width:3px}
-.readme-body::-webkit-scrollbar-thumb{background:var(--dim)}
-.rm-h1{color:var(--pink);font-size:14px;font-weight:700;text-shadow:0 0 12px var(--pink-glow);margin-bottom:0.8rem;display:block}
-.rm-h2{color:var(--blue);font-size:12px;font-weight:700;text-shadow:0 0 8px var(--blue-glow);margin:1.2rem 0 0.4rem;display:block;letter-spacing:0.05em}
-.rm-p{color:var(--text2);display:block;margin-bottom:0.3rem}
-.rm-tag{display:inline-block;padding:0.15rem 0.5rem;font-size:10px;border:1px solid;margin:0.2rem 0.2rem 0.2rem 0}
-.rm-tag-pk{color:var(--pink);border-color:rgba(255,45,120,0.35);background:rgba(255,45,120,0.08)}
-.rm-tag-bl{color:var(--blue);border-color:rgba(0,212,255,0.35);background:rgba(0,212,255,0.08)}
-.rm-tag-pu{color:var(--purple);border-color:rgba(180,77,255,0.35);background:rgba(180,77,255,0.08)}
-.rm-tag-ye{color:var(--yellow);border-color:rgba(255,230,109,0.35);background:rgba(255,230,109,0.08)}
-.rm-tag-gr{color:var(--green);border-color:rgba(57,255,142,0.35);background:rgba(57,255,142,0.08)}
-.rm-tag-re{color:var(--red);border-color:rgba(255,69,102,0.35);background:rgba(255,69,102,0.08)}
-.rm-div{display:block;height:1px;background:var(--border);margin:1rem 0}
-.rm-kv{display:flex;gap:0.5rem;margin-bottom:0.25rem}
-.rm-key{color:var(--text2);width:110px;flex-shrink:0;font-size:11px}
-.rm-val{color:var(--text);font-size:11px}
-.rm-cmd{display:inline-block;color:var(--green);background:rgba(57,255,142,0.07);border:1px solid rgba(57,255,142,0.2);padding:0.1rem 0.45rem;font-size:11px;margin:0.1rem 0}
-.rm-finding{border-left:2px solid;padding:0.5rem 0.75rem;margin:0.5rem 0;font-size:11px}
-.rm-finding-crit{border-color:var(--red);background:rgba(255,69,102,0.05)}
-.rm-finding-high{border-color:var(--pink);background:rgba(255,45,120,0.05)}
-.rm-finding-med{border-color:var(--yellow);background:rgba(255,230,109,0.05)}
-.rm-finding-info{border-color:var(--blue);background:rgba(0,212,255,0.05)}
-.rm-finding-title{font-weight:700;display:block;margin-bottom:0.2rem}
-.rm-finding-crit .rm-finding-title{color:var(--red)}
-.rm-finding-high .rm-finding-title{color:var(--pink)}
-.rm-finding-med .rm-finding-title{color:var(--yellow)}
-.rm-finding-info .rm-finding-title{color:var(--blue)}
-.readme-footer{padding:0.8rem 1.2rem;border-top:1px solid var(--border);flex-shrink:0;background:var(--bg3)}
-.rm-footer-hint{font-size:10px;color:var(--muted);letter-spacing:0.05em}
-.tb-readme-btn{font-size:10px;color:var(--purple);border:1px solid rgba(180,77,255,0.35);padding:0.2rem 0.65rem;cursor:pointer;letter-spacing:0.08em;transition:all 0.2s;background:none;font-family:"JetBrains Mono",monospace}
-.tb-readme-btn:hover,.tb-readme-btn.active{color:var(--pink);border-color:rgba(255,45,120,0.5);background:rgba(255,45,120,0.06)}
-#readme-overlay{position:fixed;inset:0;background:rgba(0,0,10,0.45);z-index:499;opacity:0;pointer-events:none;transition:opacity 0.35s ease}
-#readme-overlay.open{opacity:1;pointer-events:all}
-.line{display:block;margin-bottom:1px}
-.line-prompt{display:flex;gap:0;margin-bottom:0.15rem;margin-top:0.5rem;flex-wrap:wrap}
-.lp-user{color:var(--pink);font-weight:700;text-shadow:0 0 8px var(--pink-glow)}
-.lp-at{color:var(--muted)}.lp-host{color:var(--blue);text-shadow:0 0 6px var(--blue-glow)}
-.lp-colon{color:var(--muted)}.lp-path{color:var(--purple)}.lp-dollar{color:var(--pink);margin-right:0.5rem}
-.lp-cmd{color:var(--text)}
-.out{display:block;padding-left:0;margin-bottom:1px}
-.blank{display:block;height:0.55rem}
-.out-pk{color:var(--pink);text-shadow:0 0 8px var(--pink-glow)}
-.out-bl{color:var(--blue);text-shadow:0 0 6px var(--blue-glow)}
-.out-pu{color:var(--purple)}.out-cy{color:var(--cyan)}.out-ye{color:var(--yellow)}
-.out-gr{color:var(--green)}.out-re{color:var(--red)}.out-mu{color:var(--muted)}
-.out-di{color:var(--dim)}.out-tx{color:var(--text)}.out-t2{color:var(--text2)}
-.file-entry{display:inline-block;margin-right:1.5rem;margin-bottom:4px}
-.fe-dir{color:var(--blue);font-weight:700;text-shadow:0 0 6px var(--blue-glow)}
-.fe-sh{color:var(--green)}.fe-md{color:var(--text)}.fe-txt{color:var(--text2)}.fe-cert{color:var(--yellow)}
-.scan-line{display:flex;align-items:center;gap:1rem;margin-bottom:3px;padding:0 2rem}
-.scan-bar{flex:1;height:2px;background:var(--dim);border-radius:1px;overflow:hidden}
-.scan-fill{height:100%;border-radius:1px;transition:width 0.6s cubic-bezier(.4,0,.2,1)}
-.help-row{display:grid;grid-template-columns:190px 1fr;gap:0.75rem;margin-bottom:3px}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.8)}}
-.pulse-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite;margin-right:0.5rem;box-shadow:0 0 8px var(--green)}
-#matrix-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;opacity:0.04}
-@keyframes fadeSlide{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
-.out,.line,.blank{animation:fadeSlide 0.1s ease forwards}
+  /* scan progress bar */
+  #scan{position:fixed;top:0;left:0;height:2px;width:0;z-index:60;
+    background:linear-gradient(90deg,var(--accent-2),var(--accent));box-shadow:0 0 12px var(--accent)}
+
+  /* nav */
+  header.nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(10px);background:rgba(10,14,22,.72);border-bottom:1px solid var(--border-soft)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:60px}
+  .brand{display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:14px}
+  .brand .dot{width:9px;height:9px;border-radius:50%;background:var(--accent-2);box-shadow:0 0 10px var(--accent-2);animation:pulse 2.4s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+  .brand b{color:var(--text);font-weight:700}.brand span{color:var(--text-faint)}
+  nav.links{display:flex;gap:4px}
+  nav.links a{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--text-dim);padding:7px 11px;border-radius:6px;transition:.2s}
+  nav.links a:hover{color:var(--accent);background:var(--surface)}
+  .nav-cta{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--accent);border:1px solid var(--accent);padding:7px 13px;border-radius:6px;transition:.2s}
+  .nav-cta:hover{background:var(--accent);color:#0a0e16}
+  @media(max-width:760px){nav.links{display:none}}
+
+  /* hero */
+  .hero{padding:70px 0 30px;position:relative}
+  #nodes{position:absolute;inset:0;width:100%;height:100%;z-index:0;opacity:.55}
+  .hero .wrap{position:relative;z-index:1}
+  .eyebrow{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--accent-2);letter-spacing:.06em;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+  .eyebrow::before{content:"";width:24px;height:1px;background:var(--accent-2)}
+  .recon{font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.85;color:var(--text-dim);margin-bottom:26px;min-height:130px}
+  .recon .ln{white-space:pre-wrap}.recon .ok{color:var(--accent-2)}.recon .pmt{color:var(--accent)}.recon .done{color:var(--text-faint)}
+  .cursor{display:inline-block;width:9px;height:16px;background:var(--accent);vertical-align:-2px;animation:blink 1.05s step-end infinite}
+  @keyframes blink{50%{opacity:0}}
+  h1.name{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(2.8rem,8vw,5.4rem);line-height:.98;letter-spacing:-.02em;color:var(--text);margin-bottom:14px}
+  h1.name .glow{color:var(--accent);text-shadow:0 0 38px rgba(255,90,48,.45)}
+  .role{font-family:'JetBrains Mono',monospace;font-size:clamp(.95rem,2.6vw,1.2rem);color:var(--text-dim);margin-bottom:24px}
+  .role b{color:var(--accent-2);font-weight:500}
+  .hero-meta{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:30px}
+  .chip{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-dim);border:1px solid var(--border);background:var(--surface);padding:6px 11px;border-radius:999px}
+  .chip b{color:var(--text)}
+  .hero-cta{display:flex;flex-wrap:wrap;gap:12px}
+  .btn{font-family:'JetBrains Mono',monospace;font-size:13px;padding:12px 18px;border-radius:8px;border:1px solid var(--border);transition:.2s;cursor:pointer;display:inline-flex;align-items:center;gap:9px}
+  .btn-primary{background:var(--accent);color:#0a0e16;border-color:var(--accent);font-weight:700}
+  .btn-primary:hover{box-shadow:0 0 26px rgba(255,90,48,.5);transform:translateY(-2px)}
+  .btn-ghost{background:transparent;color:var(--text)}
+  .btn-ghost:hover{border-color:var(--accent-2);color:var(--accent-2)}
+
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
+  .reveal.in{opacity:1;transform:none}
+
+  section{padding:64px 0;position:relative}
+  .sec-head{margin-bottom:34px}
+  .sec-tag{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--accent);letter-spacing:.04em;margin-bottom:10px}
+  .sec-tag .n{color:var(--text-faint)}
+  h2{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(1.7rem,4.5vw,2.5rem);letter-spacing:-.015em;color:var(--text)}
+  .sec-sub{color:var(--text-dim);max-width:580px;margin-top:10px;font-size:15px}
+
+  /* terminal */
+  .term{border:1px solid var(--border);border-radius:var(--r);background:var(--bg-soft);overflow:hidden;box-shadow:0 30px 80px -30px rgba(0,0,0,.8)}
+  .term-bar{display:flex;align-items:center;gap:8px;padding:11px 14px;background:var(--surface);border-bottom:1px solid var(--border)}
+  .term-bar .tl{width:11px;height:11px;border-radius:50%}
+  .tl.r{background:#ff5f57}.tl.y{background:#febc2e}.tl.g{background:#28c840}
+  .term-title{margin-left:8px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-faint)}
+  .term-hint{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-faint)}
+  .term-body{font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.7;padding:18px;height:440px;overflow-y:auto}
+  .term-body::-webkit-scrollbar{width:9px}.term-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:9px}
+  .t-line{white-space:pre-wrap;word-break:break-word}
+  .t-cmd{color:var(--text)}.t-out{color:var(--text-dim)}.t-key{color:var(--text);font-weight:500}
+  .t-ok{color:var(--accent-2)}.t-warn{color:var(--med)}.t-err{color:var(--crit)}.t-dim{color:var(--text-faint)}.t-acc{color:var(--accent)}
+  .input-row{display:flex;align-items:center;gap:8px}
+  .ps{color:var(--accent);white-space:nowrap}.ps .u{color:var(--accent-2)}.ps .p{color:var(--low)}
+  #cmd{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:13.5px;caret-color:var(--accent)}
+  .quickcmds{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .qc{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-dim);border:1px solid var(--border);background:var(--surface);padding:6px 12px;border-radius:6px;cursor:pointer;transition:.18s}
+  .qc:hover{border-color:var(--accent);color:var(--accent)}
+
+  /* profile */
+  .grid-2{display:grid;grid-template-columns:1.4fr 1fr;gap:28px}
+  @media(max-width:820px){.grid-2{grid-template-columns:1fr}}
+  .panel{border:1px solid var(--border);border-radius:var(--r);background:var(--surface);padding:26px}
+  .panel p{color:var(--text-dim);font-size:15.5px}.panel p b{color:var(--text);font-weight:600}
+  .stat-row{display:flex;flex-direction:column;gap:14px}
+  .stat{border:1px solid var(--border-soft);border-radius:8px;background:var(--bg-soft);padding:16px 18px}
+  .stat .num{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.9rem;color:var(--accent)}
+  .stat .lbl{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text-dim);letter-spacing:.03em}
+
+  /* methodology stepper */
+  .method{display:grid;grid-template-columns:260px 1fr;gap:24px}
+  @media(max-width:760px){.method{grid-template-columns:1fr}}
+  .steps{display:flex;flex-direction:column;gap:8px}
+  .step{display:flex;align-items:center;gap:13px;padding:13px 15px;border:1px solid var(--border-soft);border-radius:9px;background:var(--surface);cursor:pointer;transition:.2s;text-align:left;font-family:inherit}
+  .step:hover{border-color:var(--border)}
+  .step.active{border-color:var(--accent);background:var(--surface-2);box-shadow:0 0 22px -8px rgba(255,90,48,.6)}
+  .step .si{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent);border:1px solid var(--border);border-radius:6px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .step.active .si{background:var(--accent);color:#0a0e16;border-color:var(--accent)}
+  .step .st{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:.98rem;color:var(--text)}
+  .step .sp{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--text-faint)}
+  .method-detail{border:1px solid var(--border);border-radius:var(--r);background:var(--bg-soft);padding:26px 28px;min-height:230px}
+  .method-detail h3{font-family:'Space Grotesk',sans-serif;font-size:1.3rem;color:var(--text);margin-bottom:6px}
+  .method-detail .md-phase{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-2);margin-bottom:16px}
+  .method-detail p{color:var(--text-dim);font-size:14.5px;margin-bottom:14px}
+  .md-tools{display:flex;flex-wrap:wrap;gap:8px}
+  .md-tools span{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text-dim);border:1px solid var(--border-soft);background:var(--surface);padding:4px 10px;border-radius:6px}
+  .md-fade{animation:mdf .4s ease}
+  @keyframes mdf{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  /* timeline */
+  .timeline{position:relative;margin-left:6px}
+  .tl-item{position:relative;padding:0 0 38px 30px;border-left:1px solid var(--border)}
+  .tl-item:last-child{border-left-color:transparent;padding-bottom:0}
+  .tl-item::before{content:"";position:absolute;left:-6px;top:4px;width:11px;height:11px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px rgba(255,90,48,.15)}
+  .tl-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px;margin-bottom:3px}
+  .tl-role{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:1.2rem;color:var(--text)}
+  .tl-when{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-2)}
+  .tl-co{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text-dim);margin-bottom:12px}
+  .tl-list{list-style:none;display:flex;flex-direction:column;gap:9px}
+  .tl-list li{position:relative;padding-left:20px;color:var(--text-dim);font-size:14.5px}
+  .tl-list li::before{content:"▹";position:absolute;left:0;color:var(--accent);font-family:'JetBrains Mono',monospace}
+  .tl-list li b{color:var(--text);font-weight:600}
+
+  /* arsenal */
+  .legend{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:26px;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text-dim)}
+  .legend span{display:inline-flex;align-items:center;gap:7px}
+  .sev-dot{width:9px;height:9px;border-radius:2px;display:inline-block}
+  .d-crit{background:var(--crit)}.d-high{background:var(--high)}.d-med{background:var(--med)}.d-low{background:var(--low)}
+  .arsenal{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+  @media(max-width:820px){.arsenal{grid-template-columns:1fr}}
+  .ars-card{border:1px solid var(--border);border-radius:var(--r);background:var(--surface);padding:20px 22px;position:relative;overflow:hidden;transition:border-color .2s}
+  .ars-card::after{content:"";position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(255,90,48,.10),transparent 70%);left:var(--mx,50%);top:var(--my,50%);transform:translate(-50%,-50%);opacity:0;transition:opacity .25s;pointer-events:none}
+  .ars-card:hover{border-color:var(--border)}
+  .ars-card:hover::after{opacity:1}
+  .ars-card h3{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accent);margin-bottom:14px;display:flex;align-items:center;gap:9px;position:relative}
+  .ars-card h3 .hash{color:var(--text-faint)}
+  .tags{display:flex;flex-wrap:wrap;gap:8px;position:relative}
+  .tag{font-family:'JetBrains Mono',monospace;font-size:12px;padding:5px 10px;border-radius:6px;background:var(--bg-soft);border:1px solid var(--border-soft);color:var(--text);display:inline-flex;align-items:center;gap:7px;transition:.18s}
+  .tag:hover{transform:translateY(-2px);border-color:var(--border)}
+  .tag .sev{width:7px;height:7px;border-radius:2px}
+  .s-crit{box-shadow:inset 0 0 0 1px rgba(240,73,79,.35)}.s-crit .sev{background:var(--crit)}
+  .s-high{box-shadow:inset 0 0 0 1px rgba(255,122,69,.3)}.s-high .sev{background:var(--high)}
+  .s-med .sev{background:var(--med)}.s-low .sev{background:var(--low)}
+
+  /* disclosure reports */
+  .rep-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:14px}
+  .rep-archive{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--accent);border:1px solid var(--accent);padding:9px 15px;border-radius:8px;transition:.2s;white-space:nowrap}
+  .rep-archive:hover{background:var(--accent);color:#0a0e16}
+  .rep-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:8px}
+  @media(max-width:760px){.rep-grid{grid-template-columns:1fr}}
+  .rep-card{display:block;border:1px solid var(--border);border-radius:var(--r);background:var(--surface);padding:18px 20px;transition:.2s;position:relative;overflow:hidden}
+  .rep-card:hover{border-color:var(--accent);transform:translateY(-3px)}
+  .rep-card .rtop{display:flex;align-items:center;gap:9px;margin-bottom:10px}
+  .rep-sev{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:11px;padding:3px 9px;border-radius:5px;display:inline-flex;align-items:center;gap:6px}
+  .rep-sev .d{width:7px;height:7px;border-radius:2px}
+  .rs-crit{color:var(--crit);background:rgba(240,73,79,.1);border:1px solid rgba(240,73,79,.4)}.rs-crit .d{background:var(--crit)}
+  .rs-high{color:var(--high);background:rgba(255,122,69,.1);border:1px solid rgba(255,122,69,.4)}.rs-high .d{background:var(--high)}
+  .rs-med{color:var(--med);background:rgba(244,179,82,.1);border:1px solid rgba(244,179,82,.4)}.rs-med .d{background:var(--med)}
+  .rep-card .rid{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-faint);margin-left:auto}
+  .rep-card h3{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:1.04rem;color:var(--text);line-height:1.3;margin-bottom:11px}
+  .rep-card .rmeta{display:flex;flex-wrap:wrap;gap:7px}
+  .rep-card .rpill{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--text-dim);border:1px solid var(--border-soft);background:var(--bg-soft);padding:3px 8px;border-radius:5px}
+  .rep-card .rarrow{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--accent);margin-top:12px;display:inline-block}
+
+  /* certs */
+  .certs{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+  @media(max-width:760px){.certs{grid-template-columns:1fr}}
+  .cert{border:1px solid var(--border);border-radius:var(--r);background:var(--surface);padding:18px 20px;display:flex;align-items:center;gap:16px;transition:.2s}
+  .cert:hover{border-color:var(--accent);transform:translateY(-2px)}
+  .cert .badge{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:1rem;color:var(--accent);border:1px solid var(--accent);border-radius:8px;min-width:54px;height:54px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .cert .ct{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:1.02rem;color:var(--text);line-height:1.25}
+  .cert .cm{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--text-dim);margin-top:3px}
+  .cert .prog{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--med);margin-top:5px}
+
+  .edu{border:1px solid var(--border);border-radius:var(--r);background:var(--surface);padding:24px 26px}
+  .edu .deg{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:1.25rem;color:var(--text)}
+  .edu .inst{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text-dim);margin-top:6px}
+  .edu .yr{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--accent-2);margin-top:4px}
+
+  .contact-card{border:1px solid var(--border);border-radius:14px;background:linear-gradient(180deg,var(--surface),var(--bg-soft));padding:46px 34px;text-align:center;position:relative;overflow:hidden}
+  .contact-card::before{content:"";position:absolute;inset:0;background:radial-gradient(500px 240px at 50% -20%,rgba(255,90,48,.16),transparent 70%)}
+  .contact-card>*{position:relative}
+  .contact-card .pre{font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--accent-2);margin-bottom:14px}
+  .contact-card h2{margin-bottom:12px}
+  .contact-card p{color:var(--text-dim);max-width:480px;margin:0 auto 26px;font-size:15.5px}
+  .contact-actions{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+
+  footer{padding:40px 0 60px;border-top:1px solid var(--border-soft);margin-top:40px}
+  .foot-inner{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between}
+  .foot-inner .m{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-faint)}
+  .foot-inner .m b{color:var(--text-dim)}
+  .ref{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-dim)}
+  .ref a{color:var(--accent-2)}.ref a:hover{text-decoration:underline}
+
+  /* toast */
+  #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120px);z-index:80;
+    font-family:'JetBrains Mono',monospace;font-size:13px;background:var(--surface-2);border:1px solid var(--accent);
+    color:var(--text);padding:13px 20px;border-radius:10px;box-shadow:0 18px 50px -16px rgba(0,0,0,.8);transition:transform .4s cubic-bezier(.2,.9,.3,1.3);max-width:90vw}
+  #toast.show{transform:translateX(-50%) translateY(0)}
+  #toast .tk{color:var(--accent-2)}
+
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
 </style>
 </head>
 <body>
-<canvas id="matrix-canvas"></canvas>
-<div id="boot">
-  <div class="boot-logo"><span class="boot-logo-av">AVY</span><span class="boot-logo-yash">ASH</span><span style="color:var(--muted)">.SH</span></div>
-  <div class="boot-sub">penetration tester · security researcher</div>
-  <div class="boot-progress-wrap"><div class="boot-progress-bar" id="boot-bar"></div></div>
-  <div class="boot-status" id="boot-status">Initializing...</div>
-  <div class="boot-log" id="boot-log"></div>
-</div>
-<div id="shell">
-  <div class="title-bar">
-    <div class="tb-dots">
-      <div class="tb-dot tb-dot-r"></div>
-      <div class="tb-dot tb-dot-y"></div>
-      <div class="tb-dot tb-dot-g"></div>
-    </div>
-    <div class="tb-title">avyash@pentest — bash — 120×40</div>
-    <button class="tb-readme-btn" id="readme-btn" onclick="toggleReadme()">README.md</button>
-    <div class="tb-badge"><span class="pulse-dot"></span>ONLINE</div>
-  </div>
+<div id="scan"></div>
 
-  <!-- README OVERLAY -->
-  <div id="readme-overlay" onclick="toggleReadme()"></div>
+<header class="nav">
+  <div class="wrap nav-inner">
+    <div class="brand"><span class="dot"></span><b>avyash</b><span>@rayamajhi:~$</span></div>
+    <nav class="links">
+      <a href="#terminal">terminal</a>
+      <a href="#profile">profile</a>
+      <a href="#method">method</a>
+      <a href="#experience">experience</a>
+      <a href="#reports">reports</a>
+      <a href="#arsenal">arsenal</a>
+      <a href="#certs">certs</a>
+    </nav>
+    <a class="nav-cta" href="#contact">./contact</a>
+  </div>
+</header>
 
-  <!-- README PANEL -->
-  <div id="readme-panel">
-    <div class="readme-header">
-      <span class="readme-header-title">&#128196; README.md &mdash; avyash / portfolio</span>
-      <button class="readme-close" onclick="toggleReadme()">&#x2715; close</button>
+<!-- HERO -->
+<section class="hero">
+  <canvas id="nodes"></canvas>
+  <div class="wrap">
+    <div class="eyebrow">offensive security · newcastle, nsw</div>
+    <div class="recon" id="recon" aria-hidden="true"></div>
+    <h1 class="name reveal">Avyash <span class="glow">Rayamajhi</span></h1>
+    <div class="role reveal">Penetration Tester &nbsp;<span style="color:var(--text-faint)">//</span>&nbsp; <b>Bug Bounty Hunter</b> &nbsp;<span style="color:var(--text-faint)">//</span>&nbsp; Red Team</div>
+    <div class="hero-meta reveal">
+      <span class="chip"><b>3+ yrs</b> hands-on</span>
+      <span class="chip">web · api · network · mobile</span>
+      <span class="chip"><b>OSCP</b> candidate</span>
+      <span class="chip">Bugcrowd · YesWeHack · Yogosha</span>
     </div>
-    <div class="readme-body" id="readme-body"></div>
-    <div class="readme-footer">
-      <span class="rm-footer-hint">&#9670; avyash.github.io &nbsp;&#183;&nbsp; Open to engagements globally</span>
+    <div class="hero-cta reveal">
+      <a class="btn btn-primary" href="#terminal">▶ run interactive terminal</a>
+      <a class="btn btn-ghost" href="assets/Avyash_Rayamajhi_Resume.pdf" download>⤓ résumé (pdf)</a>
+      <a class="btn btn-ghost" href="#contact">get in touch</a>
     </div>
   </div>
+</section>
 
-  <div id="output"></div>
-  <div class="input-row">
-    <span class="prompt-text">
-      <span class="prompt-user">avyash</span><span class="prompt-at">@</span><span class="prompt-host">pentest</span><span class="prompt-colon">:</span><span class="prompt-path" id="prompt-path">~</span><span class="prompt-dollar">&nbsp;$&nbsp;</span>
-    </span>
-    <input type="text" id="cmd-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" autofocus>
+<!-- TERMINAL -->
+<section id="terminal">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="sec-tag"><span class="n">01 /</span> ./explore.sh</div>
+      <h2>Interactive terminal</h2>
+      <p class="sec-sub">Type a command to explore — or tap a shortcut. Try <span style="color:var(--accent);font-family:'JetBrains Mono',monospace">help</span> to start. There's a hidden flag somewhere in here — recruiters who find it get bonus points. 🚩</p>
+    </div>
+    <div class="term reveal">
+      <div class="term-bar">
+        <span class="tl r"></span><span class="tl y"></span><span class="tl g"></span>
+        <span class="term-title">avyash@portfolio — zsh</span>
+        <span class="term-hint">↑↓ history · tab complete</span>
+      </div>
+      <div class="term-body" id="termBody" tabindex="0">
+        <div class="t-line t-out">Welcome. This is an interactive shell into my background.</div>
+        <div class="t-line t-dim">Type <span class="t-acc">help</span> for available commands.</div>
+        <div class="t-line">&nbsp;</div>
+      </div>
+    </div>
+    <div class="quickcmds" id="quick"></div>
   </div>
-</div>
+</section>
+
+<!-- PROFILE -->
+<section id="profile">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="sec-tag"><span class="n">02 /</span> target_profile</div>
+      <h2>The brief</h2>
+    </div>
+    <div class="grid-2">
+      <div class="panel reveal">
+        <p>Results-driven cybersecurity professional with <b>3+ years of hands-on experience</b> across mobile, web, API, and network penetration testing. Proven track record managing complex engagements, adhering to strict governance frameworks like <b>ISO 27001</b> and the <b>ASD Essential Eight</b>, and delivering high-quality reports in corporate environments.</p>
+        <p style="margin-top:14px">Actively pursuing <b>OSCP</b> and holds the Hack The Box Penetration Tester Level 2 certification. An active bug-bounty hunter recognised for high-severity and critical findings through responsible disclosure on Bugcrowd, YesWeHack, and Yogosha.</p>
+      </div>
+      <div class="stat-row reveal">
+        <div class="stat"><div class="num" data-count="3" data-suffix="+">0</div><div class="lbl">years offensive security</div></div>
+        <div class="stat"><div class="num" data-count="5">0</div><div class="lbl">industry certifications</div></div>
+        <div class="stat"><div class="num" data-count="40" data-suffix="%">0</div><div class="lbl">recon overhead cut via automation</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- METHODOLOGY -->
+<section id="method">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="sec-tag"><span class="n">03 /</span> kill_chain</div>
+      <h2>How I work an engagement</h2>
+      <p class="sec-sub">Click through the phases of a typical authorised assessment.</p>
+    </div>
+    <div class="method reveal">
+      <div class="steps" id="steps"></div>
+      <div class="method-detail" id="methodDetail"></div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="sec-tag"><span class="n">04 /</span> engagement_log</div>
+      <h2>Experience</h2>
+    </div>
+    <div class="timeline">
+      <div class="tl-item reveal">
+        <div class="tl-head"><div class="tl-role">Penetration Tester</div><div class="tl-when">Jul 2024 — Present</div></div>
+        <div class="tl-co">@ Edxplor</div>
+        <ul class="tl-list">
+          <li>Conducted <b>black-box, grey-box, and white-box</b> tests against web, API, and mobile apps — chaining SQL injection, XSS, IDOR, auth bypass, and broken access control into full exploitation paths.</li>
+          <li>Ran <b>REST and GraphQL API</b> engagements, surfacing business-logic flaws, IDOR, and auth weaknesses aligned with the OWASP API Top 10.</li>
+          <li>Performed manual exploitation beyond automated scanning — custom payloads, <b>WAF/input-validation bypass</b>, and privilege escalation.</li>
+          <li>Earned recognition for <b>high-severity and critical findings</b> across Bugcrowd, YesWeHack, and Yogosha through responsible disclosure.</li>
+          <li>Built custom <b>Python and Bash recon tooling</b> — cutting manual overhead 40%.</li>
+          <li>Authored detailed reports with PoC exploit chains, <b>CVSS-scored findings</b>, and remediation for executive and technical audiences.</li>
+        </ul>
+      </div>
+      <div class="tl-item reveal">
+        <div class="tl-head"><div class="tl-role">Cyber Security Associate</div><div class="tl-when">Apr 2023 — May 2024</div></div>
+        <div class="tl-co">@ Greentick</div>
+        <ul class="tl-list">
+          <li>Ran end-to-end vulnerability assessments and pen tests across web apps, networks, and internal infrastructure — identifying and remediating <b>critical CVEs</b>.</li>
+          <li>Produced detailed reports with actionable remediation for executive and technical stakeholders.</li>
+          <li>Supported senior analysts on security audits and <b>threat modeling</b>.</li>
+          <li>Performed recon and enumeration on <b>authorised red team</b> assessments.</li>
+          <li>Helped implement security controls, log aggregation pipelines, and IDS rules.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DISCLOSURE REPORTS -->
+<section id="reports">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="rep-head">
+        <div>
+          <div class="sec-tag"><span class="n">05 /</span> disclosure_archive</div>
+          <h2>Disclosure reports &amp; write-ups</h2>
+          <p class="sec-sub">Sanitised write-ups from <b style="color:var(--text)">authorised</b> engagements — targets and data redacted. CVSS-scored and mapped to ISO 27001 &amp; the ASD Essential Eight.</p>
+        </div>
+        <a class="rep-archive" href="reports/index.html">view full archive →</a>
+      </div>
+    </div>
+    <div class="rep-grid reveal" id="repGrid"></div>
+  </div>
+</section>
+
+<!-- ARSENAL -->
+<section id="arsenal">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="sec-tag"><span class="n">06 /</span> arsenal</div>
+      <h2>Skills &amp; tooling</h2>
+      <p class="sec-sub">Colour-coded by depth of use, borrowing the severity scale I score findings on.</p>
+    </div>
+    <div class="legend reveal">
+      <span><i class="sev-dot d-crit"></i> core / daily</span>
+      <span><i class="sev-dot d-high"></i> strong</span>
+      <span><i class="sev-dot d-med"></i> proficient</span>
+      <span><i class="sev-dot d-low"></i> working</span>
+    </div>
+    <div class="arsenal">
+      <div class="ars-card reveal"><h3><span class="hash">#</span> offensive security</h3><div class="tags">
+        <span class="tag s-crit"><i class="sev"></i>Web Pentesting</span>
+        <span class="tag s-crit"><i class="sev"></i>API Pentesting</span>
+        <span class="tag s-high"><i class="sev"></i>Network Pentesting</span>
+        <span class="tag s-high"><i class="sev"></i>Mobile Pentesting</span>
+        <span class="tag s-high"><i class="sev"></i>Vulnerability Assessment</span>
+        <span class="tag s-high"><i class="sev"></i>Bug Bounty</span>
+        <span class="tag s-med"><i class="sev"></i>Red Teaming</span>
+        <span class="tag s-med"><i class="sev"></i>Social Engineering</span>
+        <span class="tag s-med"><i class="sev"></i>Exploit Development</span>
+      </div></div>
+      <div class="ars-card reveal"><h3><span class="hash">#</span> tools</h3><div class="tags">
+        <span class="tag s-crit"><i class="sev"></i>Burp Suite</span>
+        <span class="tag s-crit"><i class="sev"></i>Nmap</span>
+        <span class="tag s-high"><i class="sev"></i>Metasploit</span>
+        <span class="tag s-high"><i class="sev"></i>SQLMap</span>
+        <span class="tag s-high"><i class="sev"></i>Wireshark</span>
+        <span class="tag s-med"><i class="sev"></i>Nessus</span>
+        <span class="tag s-med"><i class="sev"></i>Gobuster</span>
+        <span class="tag s-med"><i class="sev"></i>Nikto</span>
+        <span class="tag s-low"><i class="sev"></i>OWASP ZAP</span>
+      </div></div>
+      <div class="ars-card reveal"><h3><span class="hash">#</span> systems &amp; scripting</h3><div class="tags">
+        <span class="tag s-crit"><i class="sev"></i>Linux (Kali)</span>
+        <span class="tag s-high"><i class="sev"></i>Python</span>
+        <span class="tag s-high"><i class="sev"></i>Bash</span>
+        <span class="tag s-med"><i class="sev"></i>PowerShell</span>
+        <span class="tag s-med"><i class="sev"></i>Active Directory</span>
+        <span class="tag s-med"><i class="sev"></i>Windows Server</span>
+        <span class="tag s-high"><i class="sev"></i>TCP/IP · DNS · HTTP/S</span>
+      </div></div>
+      <div class="ars-card reveal"><h3><span class="hash">#</span> frameworks &amp; standards</h3><div class="tags">
+        <span class="tag s-crit"><i class="sev"></i>OWASP Top 10</span>
+        <span class="tag s-crit"><i class="sev"></i>OWASP API Top 10</span>
+        <span class="tag s-high"><i class="sev"></i>CVE / CVSS scoring</span>
+        <span class="tag s-high"><i class="sev"></i>ISO 27001</span>
+        <span class="tag s-med"><i class="sev"></i>PTES</span>
+        <span class="tag s-med"><i class="sev"></i>NIST CSF</span>
+        <span class="tag s-med"><i class="sev"></i>ASD Essential Eight</span>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CERTS -->
+<section id="certs">
+  <div class="wrap">
+    <div class="sec-head reveal"><div class="sec-tag"><span class="n">07 /</span> credentials</div><h2>Certifications</h2></div>
+    <div class="certs">
+      <div class="cert reveal"><div class="badge">OSCP</div><div><div class="ct">Offensive Security Certified Professional</div><div class="cm">Offensive Security</div><div class="prog">▸ in progress</div></div></div>
+      <div class="cert reveal"><div class="badge">HTB</div><div><div class="ct">Penetration Tester Level 2</div><div class="cm">Hack The Box · Pro Lab (Dante)</div></div></div>
+      <div class="cert reveal"><div class="badge">THM</div><div><div class="ct">Pre Security Learning Path</div><div class="cm">TryHackMe</div></div></div>
+      <div class="cert reveal"><div class="badge">LIN</div><div><div class="ct">General Linux Administration</div><div class="cm">Linux Foundation</div></div></div>
+      <div class="cert reveal"><div class="badge">CSI</div><div><div class="ct">CSI Linux Certified Investigator (CSIL-CI)</div><div class="cm">CSI Linux</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="wrap">
+    <div class="sec-head reveal"><div class="sec-tag"><span class="n">08 /</span> education</div><h2>Background</h2></div>
+    <div class="edu reveal">
+      <div class="deg">B.Sc. Information Management — Computer &amp; Information Systems Security</div>
+      <div class="inst">Shanker Dev Campus · Kathmandu, Nepal</div>
+      <div class="yr">Mar 2018 — Jul 2022</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="wrap">
+    <div class="contact-card reveal">
+      <div class="pre">$ ./contact --open</div>
+      <h2>Let's find what others missed.</h2>
+      <p>Open to penetration testing roles, red team engagements, and bug bounty collaboration. Authorised testing only.</p>
+      <div class="contact-actions">
+        <a class="btn btn-primary" href="mailto:rayamajhi.avyash@gmail.com">✉ rayamajhi.avyash@gmail.com</a>
+        <a class="btn btn-ghost" href="https://linkedin.com/in/avyashrayamajhi" target="_blank" rel="noopener">in/avyashrayamajhi ↗</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot-inner">
+    <div class="m"><b>Avyash Rayamajhi</b> · Newcastle, NSW, Australia</div>
+    <div class="ref"><a href="reports/index.html">disclosure archive</a> · <a href="assets/Avyash_Rayamajhi_Resume.pdf" download>résumé (pdf)</a> · authorised testing only</div>
+  </div>
+</footer>
+
+<div id="toast"></div>
+
 <script>
 (function(){
-  const c=document.getElementById('matrix-canvas');
-  const ctx=c.getContext('2d');
-  let cols,drops;
-  function resize(){c.width=window.innerWidth;c.height=window.innerHeight;cols=Math.floor(c.width/16);drops=Array(cols).fill(1)}
-  resize();window.addEventListener('resize',resize);
-  const chars='アイウエオカキクケコ01アBCDEF!@#$%^&*<>?/\\|{}[]';
-  setInterval(()=>{
-    ctx.fillStyle='rgba(6,6,15,0.05)';ctx.fillRect(0,0,c.width,c.height);
-    ctx.font='12px JetBrains Mono,monospace';
-    drops.forEach((y,i)=>{
-      const ch=chars[Math.floor(Math.random()*chars.length)];
-      ctx.fillStyle=Math.random()>0.9?'rgba(255,45,120,0.8)':'rgba(0,212,255,0.5)';
-      ctx.fillText(ch,i*16,y*16);
-      if(y*16>c.height&&Math.random()>0.975)drops[i]=0;
-      drops[i]++;
-    });
-  },60);
-})();
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-const FS={
-  '~':{type:'dir',children:['about.txt','reports','writeups','tools','certs','contact.txt','README.md']},
-  '~/about.txt':{type:'file',content:'about'},
-  '~/contact.txt':{type:'file',content:'contact'},
-  '~/README.md':{type:'file',content:'readme'},
-  '~/reports':{type:'dir',children:['bolttech-idor-01.md','bolttech-idor-02.md','nasa-globe-xss.md','nasa-globe-enum.md','loccitane-csrf-cache.md','cms-sqli-auth-bypass.md']},
-  '~/reports/bolttech-idor-01.md':{type:'file',content:'report_bolttech_idor1'},
-  '~/reports/bolttech-idor-02.md':{type:'file',content:'report_bolttech_idor2'},
-  '~/reports/nasa-globe-xss.md':{type:'file',content:'report_nasa_xss'},
-  '~/reports/nasa-globe-enum.md':{type:'file',content:'report_nasa_enum'},
-  '~/reports/loccitane-csrf-cache.md':{type:'file',content:'report_csrf'},
-  '~/reports/cms-sqli-auth-bypass.md':{type:'file',content:'report_sqli'},
-  '~/writeups':{type:'dir',children:['chaining-cors-idor.md','self-xss-to-stored.md','csrf-cache-chain.md','api-enumeration-50k.md']},
-  '~/writeups/chaining-cors-idor.md':{type:'file',content:'writeup_cors_idor'},
-  '~/writeups/self-xss-to-stored.md':{type:'file',content:'writeup_xss'},
-  '~/writeups/csrf-cache-chain.md':{type:'file',content:'writeup_csrf'},
-  '~/writeups/api-enumeration-50k.md':{type:'file',content:'writeup_api'},
-  '~/tools':{type:'dir',children:['recon-suite.sh','idor-scanner.py','cors-checker.py','wordlists']},
-  '~/tools/recon-suite.sh':{type:'file',content:'tool_recon'},
-  '~/tools/idor-scanner.py':{type:'file',content:'tool_idor'},
-  '~/tools/cors-checker.py':{type:'file',content:'tool_cors'},
-  '~/tools/wordlists':{type:'dir',children:['api-endpoints.txt','params.txt','subdomains.txt']},
-  '~/tools/wordlists/api-endpoints.txt':{type:'file',content:'wordlist_api'},
-  '~/tools/wordlists/params.txt':{type:'file',content:'wordlist_params'},
-  '~/tools/wordlists/subdomains.txt':{type:'file',content:'wordlist_sub'},
-  '~/certs':{type:'dir',children:['eJPT.cert','PNPT.cert','CompTIA-Security+.cert','in-progress.txt']},
-  '~/certs/eJPT.cert':{type:'file',content:'cert_ejpt'},
-  '~/certs/PNPT.cert':{type:'file',content:'cert_pnpt'},
-  '~/certs/CompTIA-Security+.cert':{type:'file',content:'cert_sec'},
-  '~/certs/in-progress.txt':{type:'file',content:'cert_progress'},
-};
-
-let cwd='~';
-let hist=[],histIdx=-1;
-const out=document.getElementById('output');
-const inp=document.getElementById('cmd-input');
-const promptPath=document.getElementById('prompt-path');
-
-const bootMsgs=[
-  {s:'[  0.001 ] Loading kernel modules...',c:'out-mu'},
-  {s:'[  0.018 ] Mounting encrypted filesystem...',c:'out-mu'},
-  {s:'[  0.034 ] Initializing network interfaces...',c:'out-mu'},
-  {s:'[  0.102 ] Starting Burp Suite Pro daemon...',c:'out-bl'},
-  {s:'[  0.158 ] Loading recon modules: amass subfinder nuclei...',c:'out-bl'},
-  {s:'[  0.201 ] Connecting to YesWeHack API...',c:'out-pk'},
-  {s:'[  0.247 ] Connecting to Bugcrowd...',c:'out-pk'},
-  {s:'[  0.312 ] Loading exploit database (CVE-2025-*)...',c:'out-ye'},
-  {s:'[  0.388 ] Configuring VPN tunnel...',c:'out-mu'},
-  {s:'[  0.441 ] Importing custom wordlists...',c:'out-bl'},
-  {s:'[  0.509 ] Checking active sessions...',c:'out-mu'},
-  {s:'[  OK  ] Shell environment ready.',c:'out-gr'},
-];
-let bStep=0;
-const bBar=document.getElementById('boot-bar');
-const bStatus=document.getElementById('boot-status');
-const bLog=document.getElementById('boot-log');
-const bootEl=document.getElementById('boot');
-const shellEl=document.getElementById('shell');
-
-function runBoot(){
-  if(bStep>=bootMsgs.length){
-    bBar.style.width='100%';
-    setTimeout(()=>{
-      bootEl.style.opacity='0';shellEl.style.opacity='1';
-      setTimeout(()=>{bootEl.style.display='none';printWelcome();inp.focus()},600);
-    },500);return;
+  /* toast */
+  let toastT;
+  function toast(html){
+    const t=document.getElementById('toast'); t.innerHTML=html; t.classList.add('show');
+    clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),4200);
   }
-  const m=bootMsgs[bStep];
-  bStatus.textContent=m.s;
-  bBar.style.width=((bStep+1)/bootMsgs.length*100)+'%';
-  const li=document.createElement('div');
-  li.className='boot-log-line '+m.c;
-  li.textContent=m.s;
-  bLog.appendChild(li);
-  bLog.scrollTop=bLog.scrollHeight;
-  bStep++;
-  setTimeout(runBoot,140+Math.random()*120);
-}
-setTimeout(runBoot,600);
 
-function printWelcome(){
-  // Glitch-typed name effect
-  function glitchType(el, finalText, color, duration, cb){
-    const chars='@#$%&!?<>/\\[]{}|^~*';
-    let frame=0; const total=Math.floor(duration/40);
-    const iv=setInterval(()=>{
-      frame++;
-      const progress=frame/total;
-      const revealed=Math.floor(progress*finalText.length);
-      let display='';
-      for(let i=0;i<finalText.length;i++){
-        if(i<revealed) display+=finalText[i];
-        else if(i===revealed) display+='<span style="color:'+color+';opacity:0.7">'+chars[Math.floor(Math.random()*chars.length)]+'</span>';
-        else display+='<span style="opacity:0.15">'+chars[Math.floor(Math.random()*chars.length)]+'</span>';
+  /* scan progress bar */
+  const scan=document.getElementById('scan');
+  function onScroll(){
+    const h=document.documentElement; const p=h.scrollTop/(h.scrollHeight-h.clientHeight);
+    scan.style.width=(p*100)+'%';
+  }
+  window.addEventListener('scroll',onScroll,{passive:true}); onScroll();
+
+  /* ---------- hero node canvas ---------- */
+  const cv=document.getElementById('nodes');
+  if(cv && !reduce){
+    const ctx=cv.getContext('2d'); let w,h,pts,mouse={x:-999,y:-999};
+    function size(){ const r=cv.parentElement.getBoundingClientRect(); w=cv.width=r.width; h=cv.height=r.height;
+      const n=Math.min(60,Math.floor(w/26)); pts=Array.from({length:n},()=>({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35})); }
+    size(); window.addEventListener('resize',size);
+    cv.parentElement.addEventListener('mousemove',e=>{const r=cv.getBoundingClientRect();mouse.x=e.clientX-r.left;mouse.y=e.clientY-r.top;});
+    cv.parentElement.addEventListener('mouseleave',()=>{mouse.x=-999;mouse.y=-999;});
+    function draw(){
+      ctx.clearRect(0,0,w,h);
+      for(const p of pts){
+        p.x+=p.vx;p.y+=p.vy;
+        if(p.x<0||p.x>w)p.vx*=-1; if(p.y<0||p.y>h)p.vy*=-1;
+        const dx=p.x-mouse.x,dy=p.y-mouse.y,md=Math.hypot(dx,dy);
+        if(md<120){p.x+=dx/md*1.2;p.y+=dy/md*1.2;}
       }
-      el.innerHTML=display;
-      if(frame>=total){clearInterval(iv);el.innerHTML='<span style="color:'+color+';text-shadow:0 0 20px '+color+'80">'+finalText+'</span>';if(cb)cb();}
-    },40);
-  }
-
-  // BIG ASCII art banner — rendered line by line
-  const banner=[
-    '',
-    '    ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░',
-    '    ░                                                             ░',
-    '    ░   █████╗ ██╗   ██╗██╗   ██╗ █████╗ ███████╗██╗  ██╗      ░',
-    '    ░  ██╔══██╗██║   ██║╚██╗ ██╔╝██╔══██╗██╔════╝██║  ██║      ░',
-    '    ░  ███████║██║   ██║ ╚████╔╝ ███████║███████╗███████║      ░',
-    '    ░  ██╔══██║╚██╗ ██╔╝  ╚██╔╝  ██╔══██║╚════██║██╔══██║      ░',
-    '    ░  ██║  ██║ ╚████╔╝    ██║   ██║  ██║███████║██║  ██║      ░',
-    '    ░  ╚═╝  ╚═╝  ╚═══╝     ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝      ░',
-    '    ░                                                             ░',
-    '    ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░',
-    '',
-  ];
-
-  // Colour each banner line with gradient pink→blue
-  banner.forEach((l,i)=>{
-    setTimeout(()=>{
-      const el=document.createElement('span');
-      el.className='out';
-      const t=(i-1)/(banner.length-2);
-      if(!l){el.className='blank';out.appendChild(el);scrollBot();return;}
-      // pink at top, blue at bottom
-      if(t<0.4){el.style.color='var(--pink)';el.style.textShadow='0 0 12px var(--pink-glow)';}
-      else if(t<0.7){el.style.color='var(--purple)';el.style.textShadow='0 0 12px rgba(180,77,255,0.5)';}
-      else{el.style.color='var(--blue)';el.style.textShadow='0 0 12px var(--blue-glow)';}
-      el.style.letterSpacing='0.02em';
-      el.textContent=l;
-      out.appendChild(el);
-      scrollBot();
-    },i*35);
-  });
-
-  const afterBanner=banner.length*35+80;
-
-  setTimeout(()=>{
-    // Glitch-type the tagline
-    const tagEl=document.createElement('span');
-    tagEl.className='out';
-    tagEl.style.cssText='font-size:11px;letter-spacing:0.3em;text-transform:uppercase;padding-left:4rem';
-    out.appendChild(tagEl);
-    glitchType(tagEl,'[ PENETRATION TESTER · SECURITY RESEARCHER · NEWCASTLE AU ]','var(--cyan)',900,()=>{});
-    scrollBot();
-  },afterBanner);
-
-  setTimeout(()=>{
-    b();
-    // Animated horizontal rule that "draws" itself
-    const hrEl=document.createElement('span');
-    hrEl.className='out out-di';
-    hrEl.textContent='';
-    out.appendChild(hrEl);
-    const hrFull='  ·─────────────────────────────────────────────────────────────·';
-    let hi=0;
-    const hrIv=setInterval(()=>{hrEl.textContent=hrFull.slice(0,hi++);if(hi>hrFull.length)clearInterval(hrIv);},12);
-    scrollBot();
-  },afterBanner+1000);
-
-  setTimeout(()=>{
-    b();
-    // STATUS ROW with live clock
-    const statusEl=document.createElement('span');
-    statusEl.className='out';
-    function updateStatus(){
-      const now=new Date();
-      const ts=now.toISOString().replace('T',' ').slice(0,19)+' AEST';
-      statusEl.innerHTML=
-        '  <span class="pulse-dot"></span>'+
-        '<span style="color:var(--blue)">status</span><span style="color:var(--muted)">:</span> <span class="out-gr">ONLINE</span>'+
-        '  <span style="color:var(--dim)">|</span>  '+
-        '<span style="color:var(--blue)">shell</span><span style="color:var(--muted)">:</span> <span style="color:var(--purple)">bash 5.2</span>'+
-        '  <span style="color:var(--dim)">|</span>  '+
-        '<span style="color:var(--blue)">time</span><span style="color:var(--muted)">:</span> <span style="color:var(--pink)">'+ts+'</span>';
+      for(let i=0;i<pts.length;i++){
+        for(let j=i+1;j<pts.length;j++){
+          const a=pts[i],b=pts[j],d=Math.hypot(a.x-b.x,a.y-b.y);
+          if(d<118){ctx.strokeStyle='rgba(51,214,194,'+(1-d/118)*.32+')';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}
+        }
+      }
+      for(const p of pts){
+        const near=Math.hypot(p.x-mouse.x,p.y-mouse.y)<120;
+        ctx.fillStyle=near?'rgba(255,90,48,.95)':'rgba(51,214,194,.7)';
+        ctx.beginPath();ctx.arc(p.x,p.y,near?2.6:1.7,0,7);ctx.fill();
+      }
+      requestAnimationFrame(draw);
     }
-    updateStatus();setInterval(updateStatus,1000);
-    out.appendChild(statusEl);
-    b();
+    draw();
+  }
 
-    // ABOUT ME — typed word by word for dramatic effect
-    const aboutLines=[
-      {text:'  I break things for a living — then write about why they were broken.',color:'var(--text)',delay:0},
-      {text:'  Web apps, APIs, auth flows, logic flaws. Manual > automated, always.',color:'var(--text2)',delay:180},
-      {text:'  CVSS 9.8 on deck. Government Acknowledged. Always Learning.',color:'var(--cyan)',delay:360},
-    ];
-    aboutLines.forEach(({text,color,delay})=>{
-      setTimeout(()=>{
-        const el=document.createElement('span');
-        el.className='out';
-        el.style.color=color;
-        el.textContent='';
-        out.appendChild(el);
-        let ci=0;
-        const iv=setInterval(()=>{el.textContent+=text[ci++];scrollBot();if(ci>=text.length)clearInterval(iv);},18);
-      },delay);
-    });
-  },afterBanner+1300);
-
-  setTimeout(()=>{
-    b();
-    // INTERESTS SECTION — the human side
-    const hrEl2=document.createElement('span');
-    hrEl2.className='out out-di';
-    hrEl2.textContent='  ·─────────────────────────────────────────────────────────────·';
-    out.appendChild(hrEl2);
-    b();
-
-    const labelEl=document.createElement('span');
-    labelEl.className='out';
-    labelEl.innerHTML='  <span style="color:var(--muted);letter-spacing:0.2em;font-size:10px;text-transform:uppercase">// when not on terminal</span>';
-    out.appendChild(labelEl);
-    b();
-
-    const interests=[
-      {icon:'⛰',label:'Trekking',desc:'Somewhere in the Himalayans, offline.',col:'var(--green)'},
-      {icon:'🎸',label:'Guitar',desc:'Self-taught. Blues & Classic Rock.',col:'var(--yellow)'},
-      {icon:'⚽',label:'Football',desc:'Centre-mid. Reads the game.',col:'var(--blue)'},
-      {icon:'🌍',label:'Outside the screen',desc:'Humans > terminals. Sometimes.',col:'var(--pink)'},
-    ];
-
-    interests.forEach(({icon,label,desc,col},i)=>{
-      setTimeout(()=>{
-        const el=document.createElement('div');
-        el.style.cssText='display:flex;align-items:center;gap:1rem;padding:3px 2rem;opacity:0;transition:opacity 0.4s ease,transform 0.4s ease;transform:translateX(-8px)';
-        el.innerHTML=
-          '<span style="font-size:16px;width:24px;text-align:center">'+icon+'</span>'+
-          '<span style="color:'+col+';width:160px;font-weight:500;text-shadow:0 0 10px '+col+'40">'+label+'</span>'+
-          '<span style="color:var(--text2)">'+desc+'</span>';
-        out.appendChild(el);
-        requestAnimationFrame(()=>setTimeout(()=>{el.style.opacity='1';el.style.transform='none';},30));
-        scrollBot();
-      },i*120);
-    });
-  },afterBanner+2000);
-
-  setTimeout(()=>{
-    b();
-    const hrEl3=document.createElement('span');
-    hrEl3.className='out out-di';
-    hrEl3.textContent='  ·─────────────────────────────────────────────────────────────·';
-    out.appendChild(hrEl3);
-    b();
-
-    // HIRE ME call to action — blink effect
-    const ctaEl=document.createElement('span');
-    ctaEl.className='out';
-    ctaEl.innerHTML=
-      '  <span style="color:var(--text2)">Looking for a </span>'+
-      '<span style="color:var(--pink);font-weight:700;text-shadow:0 0 15px var(--pink-glow)">Penetration Tester</span>'+
-      '<span style="color:var(--text2)"> or </span>'+
-      '<span style="color:var(--blue);font-weight:700;text-shadow:0 0 15px var(--blue-glow)">Security Analyst</span>'+
-      '<span style="color:var(--text2)">?  Type </span>'+
-      '<span style="color:var(--green);font-weight:700">contact</span>'+
-      '<span style="color:var(--text2)">  or  </span>'+
-      '<span style="color:var(--green);font-weight:700">sudo hire avyash</span>';
-    out.appendChild(ctaEl);
-    b();
-    row('out-t2','  Type  help  for all commands  ·  whoami  to start  ·  Tab to autocomplete');
-    b();
-    scrollBot();
-  },afterBanner+2600);
-}
-
-function row(cls,text){
-  const el=document.createElement('span');
-  el.className='out '+(cls||'');
-  el.textContent=text||'';
-  out.appendChild(el);
-  return el;
-}
-function rowHTML(cls,html){
-  const el=document.createElement('span');
-  el.className='out '+(cls||'');
-  el.innerHTML=html;
-  out.appendChild(el);
-  return el;
-}
-function b(){const el=document.createElement('span');el.className='blank';out.appendChild(el)}
-function scrollBot(){out.scrollTop=out.scrollHeight}
-function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
-
-function printPromptLine(cmd){
-  const el=document.createElement('div');
-  el.className='line-prompt';
-  el.innerHTML='<span class="lp-user">avyash</span><span class="lp-at">@</span><span class="lp-host">pentest</span><span class="lp-colon">:</span><span class="lp-path">'+esc(cwd)+'</span><span class="lp-dollar"> $ </span><span class="lp-cmd">'+esc(cmd)+'</span>';
-  out.appendChild(el);
-}
-
-function kv(key,val,valCls){
-  const el=document.createElement('span');
-  el.className='out';
-  el.innerHTML='  <span style="color:var(--text2);display:inline-block;width:160px">'+esc(key)+'</span>  <span class="'+(valCls||'out-tx')+'">'+esc(val)+'</span>';
-  out.appendChild(el);
-}
-
-function skillBar(name,pct,color){
-  const el=document.createElement('div');
-  el.className='scan-line';
-  el.innerHTML='<span style="color:var(--text2);width:220px;flex-shrink:0">'+esc(name)+'</span><div class="scan-bar"><div class="scan-fill" style="width:0%;background:'+color+';box-shadow:0 0 8px '+color+'40"></div></div><span style="color:'+color+';width:45px;text-align:right;flex-shrink:0">'+pct+'%</span>';
-  out.appendChild(el);
-  requestAnimationFrame(()=>setTimeout(()=>{const f=el.querySelector('.scan-fill');if(f)f.style.width=pct+'%'},60));
-}
-
-function resolvePath(arg){
-  if(!arg||arg==='~')return '~';
-  if(arg==='..')return cwd==='~'?'~':cwd.split('/').slice(0,-1).join('/')||'~';
-  if(arg.startsWith('~/'))return arg;
-  if(cwd==='~')return '~/'+arg;
-  return cwd+'/'+arg;
-}
-
-const CMD={
-help(){
-  b();
-  row('out-pk','  +-- COMMAND REFERENCE ------------------------------------------------+');
-  b();
-  const cmds=[
-    ['whoami','Identity card, methodology, threat profile'],
-    ['ls [path]','List files in current or specified directory'],
-    ['cd <dir>','Change directory  (cd reports · cd .. · cd ~)'],
-    ['cat <file>','Read a file -- reports, writeups, certs, tools'],
-    ['pwd','Print working directory'],
-    ['clear','Clear screen  (also Ctrl+L)'],
-    ['help','This menu'],
-    ['--'],
-    ['skills','Full technical skills matrix with animated bars'],
-    ['stats','Bug bounty statistics & CVSS severity breakdown'],
-    ['timeline','Career & engagement history'],
-    ['recon <target>','Simulate a recon run against a target domain'],
-    ['nmap [target]','Simulated nmap -sV port scan with findings'],
-    ['burp','Active Burp Suite project queue'],
-    ['contact','Contact info & professional links'],
-    ['sudo','Go ahead. Try it.'],
+  /* ---------- hero recon boot ---------- */
+  const recon=document.getElementById('recon');
+  const lines=[
+    {h:'<span class="pmt">$</span> ./recon --target avyash --deep'},
+    {h:'<span class="ok">[+]</span> resolving identity <span class="done">................ done</span>'},
+    {h:'<span class="ok">[+]</span> enumerating skill surface <span class="done">....... done</span>'},
+    {h:'<span class="ok">[+]</span> mapping experience <span class="done">............. done</span>'},
+    {h:'<span class="ok">[+]</span> verifying credentials <span class="done">.......... done</span>'},
+    {h:'<span class="ok">[+]</span> target acquired — rendering profile<span class="cursor"></span>'}
   ];
-  cmds.forEach(([c,d])=>{
-    if(c==='--'){b();return;}
-    const el=document.createElement('div');
-    el.className='help-row';
-    el.innerHTML='<span style="color:var(--blue)">&nbsp;&nbsp;'+esc(c)+'</span><span style="color:var(--text2)">'+esc(d)+'</span>';
-    out.appendChild(el);
-  });
-  b();
-  row('out-di','  Up/Down history · Tab autocomplete · Ctrl+C cancel · Ctrl+L clear');
-  row('out-pk','  +---------------------------------------------------------------------+');
-  b();
-},
+  function revealHero(){document.querySelectorAll('.hero .reveal').forEach((el,i)=>setTimeout(()=>el.classList.add('in'),i*90));}
+  if(reduce){recon.innerHTML=lines.map(l=>'<div class="ln">'+l.h.replace(/<span class="cursor"><\/span>/,'')+'</div>').join('');revealHero();}
+  else{let i=0;(function next(){if(i>=lines.length){setTimeout(revealHero,180);return;}const d=document.createElement('div');d.className='ln';d.innerHTML=lines[i].h;recon.appendChild(d);i++;setTimeout(next,360);})();}
 
-whoami(){
-  b();
-  row('out-pk','  +-- IDENTITY --------------------------------------------------------+');
-  b();
-  kv('Name','Avyash Rayamajhi','out-tx');
-  kv('Title','Penetration Tester / Security Researcher','out-bl');
-  kv('Location','Newcastle, NSW, Australia','out-tx');
-  kv('Focus','Web App · API · Authentication · Logic Flaws','out-pk');
-  kv('Platforms','YesWeHack · Bugcrowd','out-pu');
-  kv('Status','Available for engagements','out-gr');
-  b();
-  row('out-pk','  +-- ENGAGEMENT METHODOLOGY -----------------------------------------+');
-  b();
+  /* ---------- scroll reveal ---------- */
+  const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.12});
+  document.querySelectorAll('section .reveal').forEach(el=>io.observe(el));
+
+  /* ---------- animated counters ---------- */
+  const counters=document.querySelectorAll('[data-count]');
+  const cio=new IntersectionObserver((es)=>{es.forEach(e=>{
+    if(!e.isIntersecting)return; const el=e.target; cio.unobserve(el);
+    const end=+el.dataset.count, suf=el.dataset.suffix||''; const dur=1100; const t0=performance.now();
+    function tick(t){const p=Math.min((t-t0)/dur,1);const v=Math.round((1-Math.pow(1-p,3))*end);el.textContent=v+suf;if(p<1)requestAnimationFrame(tick);}
+    if(reduce){el.textContent=end+suf;}else requestAnimationFrame(tick);
+  });},{threshold:.5});
+  counters.forEach(c=>cio.observe(c));
+
+  /* ---------- methodology stepper ---------- */
   const phases=[
-    ['01','RECON     ','Subdomain enum · JS mining · Shodan · DNS bruteforce'],
-    ['02','MAPPING   ','Arch fingerprinting · Auth flows · API endpoint discovery'],
-    ['03','ANALYSIS  ','Business logic · IDOR mapping · Rate limit · Auth model'],
-    ['04','EXPLOIT   ','Manual verification · Primitive chaining · Impact PoC'],
-    ['05','REPORTING ','CVSSv3 · PoC code · Remediation guidance · Retest'],
+    {k:'01',t:'Scoping & Rules',p:'pre-engagement',d:'Lock down scope, rules of engagement, and authorisation in writing before anything else. Define targets, testing windows, and what is explicitly out of scope. No testing happens without documented permission.',tools:['Scope docs','RoE','Authorisation']},
+    {k:'02',t:'Reconnaissance',p:'recon & enumeration',d:'Map the attack surface with passive and active recon — subdomain enumeration, port scanning, and endpoint discovery. Custom Python/Bash tooling automates the grind and cuts manual overhead by ~40%.',tools:['Nmap','Gobuster','Custom scripts','OSINT']},
+    {k:'03',t:'Vulnerability Analysis',p:'identification',d:'Combine automated scanning with manual review to find real, exploitable issues — not just scanner noise. Validate every finding to rule out false positives before moving on.',tools:['Burp Suite','Nessus','Nikto','Manual review']},
+    {k:'04',t:'Exploitation',p:'proof of impact',d:'Manually exploit confirmed flaws — SQLi, XSS, IDOR, auth bypass, broken access control — chaining them into full paths. Craft custom payloads and bypass WAF/input validation to demonstrate real impact.',tools:['SQLMap','Custom payloads','Metasploit','WAF bypass']},
+    {k:'05',t:'Post-Exploitation',p:'escalation & pivot',d:'Escalate privileges and assess blast radius within the agreed scope — what an attacker could actually reach. Document the path carefully and avoid any action beyond the engagement boundary.',tools:['Priv-esc','AD enumeration','Pivoting']},
+    {k:'06',t:'Reporting',p:'remediation',d:'Deliver a clear report with PoC exploit chains, CVSS-scored severity, and remediation guidance tailored for both executive and technical readers. The fix matters as much as the find.',tools:['CVSS','PoC chains','Exec + tech writeups']}
   ];
-  phases.forEach(([n,ph,d])=>{
-    const el=document.createElement('span');
-    el.className='out';
-    el.innerHTML='  <span style="color:var(--muted)">'+n+'</span> <span style="color:var(--pink);display:inline-block;width:120px"> '+ph+'</span><span style="color:var(--text2)">'+esc(d)+'</span>';
-    out.appendChild(el);
+  const stepsEl=document.getElementById('steps'), detailEl=document.getElementById('methodDetail');
+  function renderDetail(i){
+    const ph=phases[i];
+    detailEl.innerHTML='<div class="md-fade"><div class="md-phase">phase '+ph.k+' · '+ph.p+'</div><h3>'+ph.t+'</h3><p>'+ph.d+'</p><div class="md-tools">'+ph.tools.map(t=>'<span>'+t+'</span>').join('')+'</div></div>';
+    [...stepsEl.children].forEach((c,j)=>c.classList.toggle('active',j===i));
+  }
+  phases.forEach((ph,i)=>{
+    const b=document.createElement('button'); b.className='step'+(i===0?' active':'');
+    b.innerHTML='<span class="si">'+ph.k+'</span><span><span class="st">'+ph.t+'</span><br><span class="sp">'+ph.p+'</span></span>';
+    b.addEventListener('click',()=>renderDetail(i)); b.addEventListener('mouseenter',()=>renderDetail(i));
+    stepsEl.appendChild(b);
   });
-  b();
-  row('out-pk','  +--------------------------------------------------------------------+');
-  b();
-  row('out-t2','  Try:  ls  ·  cd reports  ·  cat about.txt  ·  skills');
-  b();
-},
+  renderDetail(0);
 
-ls(args){
-  const target=args[0]?resolvePath(args[0]):cwd;
-  const node=FS[target];
-  if(!node){row('out-re',"  ls: cannot access '"+args[0]+"': No such file or directory");return;}
-  if(node.type==='file'){row('out-tx','  '+target.split('/').pop());return;}
-  b();
-  row('out-bl','  '+target+'/');
-  b();
-  const wrap=document.createElement('div');
-  wrap.style.cssText='padding-left:2rem;line-height:2.2';
-  node.children.forEach(name=>{
-    const fp=target==='~'?'~/'+name:target+'/'+name;
-    const child=FS[fp];
-    const isDir=child&&child.type==='dir';
-    const ext=name.split('.').pop();
-    const sp=document.createElement('span');
-    sp.className='file-entry';
-    let cls='fe-txt',icon='[f] ';
-    if(isDir){cls='fe-dir';icon='[d] ';}
-    else if(ext==='sh'||ext==='py'){cls='fe-sh';icon='[x] ';}
-    else if(ext==='cert'){cls='fe-cert';icon='[c] ';}
-    else if(ext==='md'){cls='fe-md';icon='[m] ';}
-    sp.innerHTML='<span class="'+cls+'">'+icon+esc(name)+(isDir?'/':'')+'</span>';
-    wrap.appendChild(sp);
+  /* ---------- arsenal spotlight ---------- */
+  document.querySelectorAll('.ars-card').forEach(card=>{
+    card.addEventListener('mousemove',e=>{const r=card.getBoundingClientRect();card.style.setProperty('--mx',(e.clientX-r.left)+'px');card.style.setProperty('--my',(e.clientY-r.top)+'px');});
   });
-  out.appendChild(wrap);
-  b();
-},
 
-cd(args){
-  const target=resolvePath(args[0]||'~');
-  const node=FS[target];
-  if(!node){row('out-re','  cd: '+args[0]+': No such file or directory');return;}
-  if(node.type==='file'){row('out-re','  cd: '+args[0]+': Not a directory');return;}
-  cwd=target;promptPath.textContent=cwd;
-  CMD.ls([]);
-},
-
-pwd(){row('out-tx','  '+cwd.replace('~','/home/avyash'));},
-
-cat(args){
-  if(!args[0]){row('out-re','  cat: missing operand');return;}
-  const target=resolvePath(args[0]);
-  const node=FS[target];
-  if(!node){row('out-re','  cat: '+args[0]+': No such file or directory');return;}
-  if(node.type==='dir'){row('out-re','  cat: '+args[0]+': Is a directory');return;}
-  renderContent(node.content);
-},
-
-clear(){out.innerHTML='';},
-
-skills(){
-  b();
-  row('out-pk','  +-- TECHNICAL SKILLS MATRIX ----------------------------------------+');
-  b();
-  const groups=[
-    {title:'WEB & API SECURITY',color:'var(--pink)',skills:[
-      ['IDOR / BOLA',95],['Authentication Bypass',90],['XSS (Stored/DOM/Reflected)',88],
-      ['CSRF + Chain Attacks',85],['SSRF / SSTI',80],['SQL Injection',82],
-      ['CORS Misconfiguration',88],['Cache Poisoning',80],['Business Logic Flaws',93],
-    ]},
-    {title:'TOOLS & FRAMEWORKS',color:'var(--blue)',skills:[
-      ['Burp Suite Pro',95],['FFUF / Feroxbuster',90],['Nuclei',85],
-      ['Amass / Subfinder',88],['Metasploit',78],['Nmap / Masscan',85],['SQLMap',80],
-    ]},
-    {title:'PROGRAMMING',color:'var(--purple)',skills:[
-      ['Python (Automation)',88],['Bash Scripting',90],['JavaScript / DOM',80],
-      ['Custom Recon Tooling',85],['API Interaction (curl/httpx)',92],
-    ]},
+  /* ---------- disclosure reports grid ---------- */
+  const repData=[
+    {sev:"Critical",cls:"rs-crit",id:"AVR-2025-0017",title:"JWT algorithm-confusion → auth bypass &amp; account takeover",cat:"Auth Bypass",cvss:"9.1",slug:"AVR-2025-0017-auth-bypass"},
+    {sev:"Critical",cls:"rs-crit",id:"AVR-2024-0142",title:"Union-based SQL injection → full database disclosure",cat:"SQL Injection",cvss:"9.4",slug:"AVR-2024-0142-sql-injection"},
+    {sev:"Critical",cls:"rs-crit",id:"AVR-2024-0203",title:"Privilege escalation via mass assignment of role",cat:"Priv-Esc",cvss:"8.8",slug:"AVR-2024-0203-privilege-escalation"},
+    {sev:"High",cls:"rs-high",id:"AVR-2024-0188",title:"IDOR on invoice endpoint exposes tenant PII",cat:"IDOR / BOLA",cvss:"8.1",slug:"AVR-2024-0188-idor"},
+    {sev:"High",cls:"rs-high",id:"AVR-2024-0231",title:"Unauthenticated endpoint leaks customer PII",cat:"PII Exposure",cvss:"7.5",slug:"AVR-2024-0231-pii-exposure"},
+    {sev:"Medium",cls:"rs-med",id:"AVR-2025-0044",title:"Race condition in promo redemption (TOCTOU)",cat:"Business Logic",cvss:"6.5",slug:"AVR-2025-0044-race-condition"}
   ];
-  groups.forEach(g=>{
-    b();
-    const hdr=row('','  -- '+g.title+' '+'-'.repeat(Math.max(0,48-g.title.length)));
-    hdr.style.color=g.color;hdr.style.textShadow='0 0 10px '+g.color+'40';
-    b();
-    g.skills.forEach(([n,p])=>skillBar(n,p,g.color));
-  });
-  b();
-  row('out-pk','  +--------------------------------------------------------------------+');
-  b();
-},
+  const repGrid=document.getElementById('repGrid');
+  if(repGrid){repData.forEach(r=>{
+    const a=document.createElement('a');a.className='rep-card';a.href='reports/'+r.slug+'.html';
+    a.innerHTML='<div class="rtop"><span class="rep-sev '+r.cls+'"><span class="d"></span>'+r.sev+'</span><span class="rid">'+r.id+'</span></div>'+
+      '<h3>'+r.title+'</h3>'+
+      '<div class="rmeta"><span class="rpill">'+r.cat+'</span><span class="rpill">CVSS '+r.cvss+'</span></div>'+
+      '<span class="rarrow">read report →</span>';
+    repGrid.appendChild(a);
+  });}
 
-stats(){
-  b();
-  row('out-pk','  +-- BUG BOUNTY STATISTICS -------------------------------------------+');
-  b();
-  const stats=[
-    ['Total Submissions','100+','out-tx'],
-    ['Accepted Findings','71+','out-bl'],
-    ['In Triage','1  (CVSS 9.8 Critical -- SQLi Auth Bypass)','out-cy'],
-    ['Duplicate / N/A','9','out-mu'],
-    ['Highest CVSS','9.8 -- CMS SQLi Auth Bypass (Critical)','out-re'],
-    ['Platforms','YesWeHack · Bugcrowd','out-pu'],
-    ['Hall of Fame','Gov.in','out-ye'],
-  ];
-  stats.forEach(([k,v,c])=>kv(k,v,c));
-  b();
-  row('out-bl','  SEVERITY BREAKDOWN');
-  b();
-  [['CRITICAL',1,'var(--red)'],['HIGH',5,'var(--pink)'],['MEDIUM',6,'var(--yellow)'],['LOW',3,'var(--blue)']].forEach(([s,n,col])=>{
-    const el=document.createElement('div');
-    el.style.cssText='display:flex;align-items:center;gap:1rem;padding:0 2rem 4px';
-    el.innerHTML='<span style="color:'+col+';border:1px solid '+col+'40;background:'+col+'10;padding:2px 8px;width:65px;text-align:center;font-size:10px">'+s+'</span><div style="width:'+(n/8*200)+'px;height:8px;background:'+col+';border-radius:2px;box-shadow:0 0 10px '+col+'60"></div><span style="color:'+col+'">'+n+'</span>';
-    out.appendChild(el);
-  });
-  b();
-  row('out-pk','  +--------------------------------------------------------------------+');
-  b();
-},
-
-timeline(){
-  b();
-  row('out-pk','  +-- CAREER TIMELINE -------------------------------------------------+');
-  b();
-  const events=[
-    ['2026','NOW ','pk','Applied for Cyber Analyst -- Port Stephens Council'],
-    ['2026','Q2  ','re','CMS SQLi Auth Bypass -- CVSS 9.8 Critical -- In Triage (YesWeHack)'],
-    ['2026','Q1  ','bl','Bolttech ADBX: 2x IDOR findings accepted (P3/P3)'],
-    ['2025','Q4  ','bl','NASA GLOBE: XSS chain research + enumeration finding'],
-    ['2025','Q3  ','pk','YesWeHack: CORS+IDOR on insurance API -- CVSS 8.1 (High)'],
-    ['2025','Q2  ','pu','Joined Bugcrowd -- NASA VDP onboarding'],
-    ['2025','Q1  ','ye',"L'Occitane: CSRF via Varnish cache poisoning chain"],
-    ['2024','Q4  ','bl','First private program invite -- YesWeHack'],
-    ['2024','Q2  ','pu','Completed PNPT -- TCM Security (5-day practical exam)'],
-    ['2024','Q1  ','bl','Completed eJPT -- INE Security'],
-    ['2023','Q3  ','mu','Started penetration testing -- labs, CTFs, home network'],
-  ];
-  events.forEach(([year,period,col,text])=>{
-    const el=document.createElement('span');
-    el.className='out';
-    el.innerHTML='  <span style="color:var(--text2);display:inline-block;width:50px">'+year+'</span><span style="color:var(--'+col+');display:inline-block;width:50px">'+period+'</span><span style="color:var(--'+col+')">&#9658;</span> <span style="color:var(--text)">'+esc(text)+'</span>';
-    out.appendChild(el);
-  });
-  b();
-  row('out-pk','  +--------------------------------------------------------------------+');
-  b();
-},
-
-contact(){
-  b();
-  row('out-pk','  +-- CONTACT & LINKS -------------------------------------------------+');
-  b();
-  const links=[
-    ['Email','rayamajhi.avyash@gmail.com','mailto:rayamajhi.avyash@gmail.com','pk'],
-    ['LinkedIn','linkedin.com/in/avyash-rayamajhi','https://www.linkedin.com/in/avyash-rayamajhi/','bl'],
-  ];
-  links.forEach(([label,display,href,col])=>{
-    const el=document.createElement('span');
-    el.className='out';
-    el.innerHTML='  <span style="color:var(--text2);display:inline-block;width:110px">'+label+'</span>  <a href="'+href+'" target="_blank" style="color:var(--'+col+');text-decoration:none;text-shadow:0 0 8px var(--'+col+')">'+esc(display)+'</a>';
-    out.appendChild(el);
-  });
-  b();
-  row('out-t2','  Available for: penetration testing · red team · security consulting');
-  row('out-t2','  Open to remote work globally.');
-  b();
-  row('out-pk','  +--------------------------------------------------------------------+');
-  b();
-},
-
-recon(args){
-  const target=args[0]||'target.example.com';
-  b();
-  row('out-ye','  [RECON] Initialising against: '+target);
-  b();
-  const steps=[
-    [80,  'out-t2','  [*] Starting subdomain enumeration (amass + subfinder)...'],
-    [500, 'out-bl','  [+] Discovered 14 subdomains'],
-    [600, 'out-bl','  [+] api.'+target+' -> 104.21.33.17'],
-    [800, 'out-pk','  [!] admin.'+target+' -> 104.21.33.19  (interesting)'],
-    [1100,'out-t2','  [*] Running httpx live-host detection...'],
-    [1500,'out-bl','  [+] 11/14 subdomains returned 200 OK'],
-    [1800,'out-t2','  [*] Mining JS files via katana + linkfinder...'],
-    [2200,'out-bl','  [+] API base path found: /api/v2/'],
-    [2300,'out-pk','  [!] Undocumented endpoint: /api/v2/admin/users (no auth check?)'],
-    [2700,'out-t2','  [*] Nuclei scanning (exposures + misconfigs)...'],
-    [3200,'out-ye','  [!] CORS wildcard origin reflected on /api/'],
-    [3400,'out-pk','  [!] Spring Actuator endpoints exposed: /actuator/env'],
-    [3800,'out-t2','  [*] Writing report...'],
-    [4200,'out-gr','  [done] Recon complete -- 4 actionable findings queued'],
-  ];
-  steps.forEach(([d,c,t])=>setTimeout(()=>{row(c,t);scrollBot()},d));
-  setTimeout(()=>{b();scrollBot()},4400);
-},
-
-nmap(args){
-  const target=args.filter(a=>!a.startsWith('-')).join('')||'192.168.1.1';
-  b();
-  row('out-bl','  Starting Nmap 7.94 ( https://nmap.org )');
-  row('out-t2','  Nmap scan report for '+target);
-  row('out-t2','  Host is up (0.018s latency).');
-  b();
-  row('out-t2','  PORT       STATE    SERVICE        VERSION');
-  row('out-di','  '+'-'.repeat(65));
-  const ports=[
-    ['22/tcp','open','ssh','OpenSSH 8.9p1 Ubuntu 22.04','bl'],
-    ['80/tcp','open','http','nginx 1.18.0','bl'],
-    ['443/tcp','open','https','nginx 1.18.0 (TLS 1.3)','bl'],
-    ['8080/tcp','open','http','Apache Tomcat 9.0.68','bl'],
-    ['8443/tcp','open','https','Spring Boot Actuator exposed','pk'],
-    ['3306/tcp','closed','mysql','','mu'],
-    ['6379/tcp','open','redis','Redis 6.2.7 -- NO AUTH REQUIRED','pk'],
-  ];
-  ports.forEach(([port,state,svc,ver,c])=>{
-    const el=document.createElement('span');
-    el.className='out';
-    el.innerHTML='  <span style="display:inline-block;width:100px">'+esc(port)+'</span><span style="color:'+(state==='open'?'var(--green)':'var(--muted)')+';display:inline-block;width:80px">'+state+'</span><span style="color:var(--blue);display:inline-block;width:130px">'+esc(svc)+'</span><span class="out-'+c+'">'+esc(ver)+'</span>';
-    out.appendChild(el);
-  });
-  b();
-  row('out-pk','  [!] Redis on 6379 open without auth -- potential unauthenticated RCE');
-  row('out-pk','  [!] Spring Actuator exposed -- enumerate /actuator/env');
-  b();
-  row('out-t2','  Nmap done: 1 IP address (1 host up) scanned in 3.87 seconds');
-  b();
-},
-
-burp(){
-  b();
-  row('out-pk','  +-- BURP SUITE PRO -- Active Project --------------------------------+');
-  b();
-  kv('Project','bolttech-d2c-staging','out-pk');
-  kv('Target','d2capi-stg.boltinc.com','out-bl');
-  kv('Proxy Intercept','ON','out-gr');
-  kv('Active Scanner','Running -- full audit','out-gr');
-  kv('Collaborator','Active -- 2 pending interactions','out-ye');
-  b();
-  row('out-bl','  ITEMS IN TEST QUEUE');
-  b();
-  [
-    ['#001','POST /api/v1/policy/update      ','Testing IDOR on policy_id param'],
-    ['#002','GET  /api/v1/user/{id}/documents','BOLA -- enumerating 10000-10200'],
-    ['#003','PUT  /api/v1/payment/method      ','JWT none algorithm auth bypass'],
-  ].forEach(([id,ep,note])=>{
-    const el=document.createElement('span');
-    el.className='out';
-    el.innerHTML='  <span style="color:var(--muted);width:50px;display:inline-block">'+id+'</span><span style="color:var(--cyan);width:310px;display:inline-block">'+esc(ep)+'</span><span style="color:var(--text2)">'+esc(note)+'</span>';
-    out.appendChild(el);
-  });
-  b();
-  row('out-t2','  cat ~/reports/bolttech-idor-01.md  to see accepted findings');
-  row('out-pk','  +--------------------------------------------------------------------+');
-  b();
-},
-
-sudo(){
-  b();
-  row('out-t2','  [sudo] password for avyash:');
-  setTimeout(()=>{
-    row('out-re','  Sorry, try again.');
-    setTimeout(()=>{
-      row('out-re','  Sorry, try again.');
-      setTimeout(()=>{
-        row('out-re','  sudo: 3 incorrect password attempts');
-        b();
-        row('out-mu',"  Nice try. You don't need root to Hire Me ;)");
-        b();scrollBot();
-      },1200);
-    },1000);
-  },1600);
-},
-};
-
-function renderContent(key){
-  const C={
-readme(){
-  b();row('out-pk','  README.md');b();
-  row('out-bl','  ~/reports/    -- Sanitised vulnerability reports (accepted findings only)');
-  row('out-bl','  ~/writeups/   -- Public write-ups with full methodology walkthroughs');
-  row('out-bl','  ~/tools/      -- Custom automation scripts and recon tooling');
-  row('out-bl','  ~/certs/      -- Certifications and credentials');
-  b();
-  row('out-mu','  All target names/program details shown only where programs allow disclosure.');
-  b();
-},
-about(){
-  b();row('out-pk','  PROFILE -- Avyash Rayamajhi');b();
-  [['Name','Avyash Rayamajhi','out-tx'],['Title','Penetration Tester / Security Researcher','out-bl'],
-   ['Location','Newcastle, NSW, Australia','out-tx'],['GitHub','github.com/avyash','out-cy'],
-   ['Bugcrowd','bugcrowd.com/Avyash_Rayamajhi','out-pk'],['LinkedIn','linkedin.com/in/avyash-rayamajhi','out-bl'],
-  ].forEach(([k,v,c])=>kv(k,v,c));
-  b();
-  ['I am a penetration tester and security researcher with a focus on web application',
-   'and API security. My approach is methodical and manual -- automation covers surface',
-   'area; manual analysis finds what scanners miss: broken authorisation, chained attack',
-   'paths, and business logic vulnerabilities.',
-   '',
-   'I have worked across financial services, insurance, e-commerce, and government',
- "targets on YesWeHack, Bugcrowd, and NASA's VDP. Accepted findings include SQL Injection, XSS, IDOR",
-   'chains, CORS+IDOR combinations, CSRF via cache poisoning, and unauthenticated API',
-   '',
-   'Currently exploring toward blue-team as well and analyst roles, bridging offensive background',
-   'with developing defensive skills (SIEM, endpoint telemetry, ASD Essential Eight).',
-  ].forEach(l=>{if(!l)b();else row('out-t2','  '+l);});
-  b();
-},
-contact(){CMD.contact();},
-report_bolttech_idor1(){
-  b();row('out-pk','  +-- VULNERABILITY REPORT ------------------------------------------+');b();
-  [['Report ID','BT-IDOR-01','out-t2'],['Severity','P3 / MEDIUM  (CVSS 6.5)','out-ye'],
-   ['Status','ACCEPTED & RESOLVED','out-gr'],['Platform','YesWeHack (Private)','out-bl'],
-   ['Target','api.bolttech.com -- ADBX program','out-t2'],
-   ['Date','2026-01','out-t2'],['Type','Insecure Direct Object Reference (BOLA)','out-pk'],
-  ].forEach(([k,v,c])=>kv(k,v,c));
-  b();row('out-bl','  DESCRIPTION');b();
-  ['The /api/v1/policy/{policy_id}/documents endpoint failed to verify that the',
-   'authenticated user owned the requested policy object. An attacker with any valid',
-   'session token could enumerate sequential integer policy IDs to access documents',
-   'belonging to other customers -- including policy schedules, PII, and payment details.',
-  ].forEach(l=>row('out-t2','  '+l));
-  b();row('out-bl','  PROOF OF CONCEPT');b();
-  row('out-di','  +-- HTTP Request -------------------------------------------------');
-  row('out-gr','  GET /api/v1/policy/100234/documents HTTP/1.1');
-  row('out-gr','  Authorization: Bearer <victim_token>');
-  row('out-di','  +-----------------------------------------------------------------');b();
-  row('out-di','  +-- Response -----------------------------------------------------');
-  row('out-gr','  HTTP/1.1 200 OK');
-  row('out-gr','  { "policy_id": 100234, "holder": "John D***", "docs": [...] }');
-  row('out-di','  +-----------------------------------------------------------------');b();
-  row('out-bl','  REMEDIATION');b();
-  row('out-t2','  Implement object-level authorisation before returning policy data.');
-  row('out-t2','  Verify user_id from JWT matches policy owner_id in the database.');b();
-  row('out-pk','  +--------------------------------------------------------------------+');b();
-},
-    report_nciipc(){
-  b();
-  // Dramatic classified-doc header
-  const hdrEl=document.createElement('span');hdrEl.className='out';
-  hdrEl.innerHTML='  <span style="color:var(--yellow);letter-spacing:0.3em;font-size:11px;text-shadow:0 0 15px rgba(255,230,109,0.6)">⚠  GOVERNMENT DISCLOSURE — ACKNOWLEDGED  ⚠</span>';
-  out.appendChild(hdrEl);b();
-  row('out-di','  ════════════════════════════════════════════════════════════════════');b();
-  // Stamp effect
-  const stampEl=document.createElement('div');
-  stampEl.style.cssText='padding:0 2rem;margin-bottom:0.5rem;display:flex;align-items:center;gap:1.5rem';
-  stampEl.innerHTML=
-    '<div style="border:2px solid var(--yellow);padding:0.4rem 0.9rem;color:var(--yellow);font-size:10px;font-weight:700;letter-spacing:0.2em;text-shadow:0 0 12px rgba(255,230,109,0.5);transform:rotate(-2deg);box-shadow:0 0 20px rgba(255,230,109,0.15)">ACKNOWLEDGED</div>'+
-    '<div style="border:2px solid var(--green);padding:0.4rem 0.9rem;color:var(--green);font-size:10px;font-weight:700;letter-spacing:0.2em;text-shadow:0 0 12px rgba(57,255,142,0.5);transform:rotate(1deg);box-shadow:0 0 20px rgba(57,255,142,0.15)">INDIA GOV &middot; NCIIPC</div>'+
-    '<div style="border:2px solid var(--blue);padding:0.4rem 0.9rem;color:var(--blue);font-size:10px;font-weight:700;letter-spacing:0.2em;text-shadow:0 0 12px rgba(0,212,255,0.5);transform:rotate(-1deg);box-shadow:0 0 20px rgba(0,212,255,0.15)">SEPT 2023</div>';
-  out.appendChild(stampEl);b();
-  row('out-di','  ════════════════════════════════════════════════════════════════════');b();
- 
-  [['Report ID','NCIIPC-RVDP-2023-001','out-t2'],
-   ['Severity','HIGH — Time-Based Blind SQL Injection','out-pk'],
-   ['Status','ACKNOWLEDGED by NCIIPC RVDP (India Gov)','out-gr'],
-   ['Programme','NCIIPC Responsible Vulnerability Disclosure Programme','out-bl'],
-   ['Target','bstbpc.gov.in — Government of India','out-ye'],
-   ['Endpoint','/Books.aspx?class=Class%2011&subject=[INJECTABLE]','out-t2'],
-   ['Type','Time-Based Blind SQLi','out-pk'],
-   ['Date','September 2023','out-t2'],
-  ].forEach(([k,v,c])=>kv(k,v,c));b();
- 
-  row('out-bl','  CONTEXT');b();
-  row('out-t2','  bstbpc.gov.in is a Government of India educational portal. The Books.aspx');
-  row('out-t2','  endpoint accepted user-supplied parameters without sanitisation, enabling');
-  row('out-t2','  time-based blind SQL injection — a technique that leaks data through');
-  row('out-t2','  deliberate response delays rather than verbose error output.');b();
- 
-  row('out-bl','  ATTACK TECHNIQUE — TIME-BASED BLIND');b();
-  ['The subject parameter was appended directly into a SQL query with no parameterisation.',
-   'A crafted payload using IF(condition, SLEEP(N), 0) caused the server to delay',
-   'its response by N seconds when the injected condition evaluated TRUE.',
-   'By varying the condition (character comparison, length checks), data was',
-   'extracted one bit at a time via the timing oracle — no database error needed.',
-  ].forEach(l=>row('out-t2','  '+l));b();
- 
-  row('out-bl','  PROOF OF CONCEPT');b();
-  row('out-di','  +-- Affected URL ------------------------------------------------');
-  row('out-gr',"  http://bstbpc.gov.in/Books.aspx?class=Class%2011&subject=12345'");
-  row('out-di','  +-- Ghauri Injection Payload ------------------------------------');
-  row('out-gr',"  subject=12345' AND IF(1=1,SLEEP(5),0)-- -");
-  row('out-mu','  -- Response delayed 5 seconds: condition TRUE → injectable');
-  row('out-gr',"  subject=12345' AND IF(1=2,SLEEP(5),0)-- -");
-  row('out-mu','  -- Response immediate: condition FALSE → timing oracle confirmed');
-  row('out-di','  +-----------------------------------------------------------------');b();
- 
-  row('out-bl','  IMPACT');b();
-  [['Data Extraction','Entire database contents extractable via timing oracle'],
-   ['DoS Potential','SLEEP() payloads exhaust DB thread pool — application denial'],
-   ['Government Data','Educational records, admin credentials, internal configs at risk'],
-  ].forEach(([k,v])=>{
-    const el=document.createElement('span');el.className='out';
-    el.innerHTML='  <span style="color:var(--pink);display:inline-block;width:180px">'+k+'</span><span style="color:var(--text2)">'+v+'</span>';
-    out.appendChild(el);
-  });b();
- 
-  // The acknowledgement letter block — the hero piece
-  row('out-ye','  OFFICIAL GOVERNMENT ACKNOWLEDGEMENT');b();
-  const letterEl=document.createElement('div');
-  letterEl.style.cssText='margin:0 2rem;border:1px solid rgba(255,230,109,0.25);background:rgba(255,230,109,0.03);padding:1rem 1.2rem;position:relative';
-  letterEl.innerHTML=
-    '<div style="position:absolute;top:-1px;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--yellow),transparent)"></div>'+
-    '<div style="font-size:10px;color:var(--muted);letter-spacing:0.1em;margin-bottom:0.6rem">FROM: NCIIPC RVDP &lt;rvdp@nciipc.gov.in&gt; &nbsp;·&nbsp; Mon, 4 Sept 2023, 21:54</div>'+
-    '<div style="color:var(--text);font-size:12px;line-height:1.8;border-left:2px solid var(--yellow);padding-left:0.8rem">'+
-    '<div style="margin-bottom:0.4rem"><span style="color:var(--yellow)">1.</span> We acknowledge the issue reported by you.</div>'+
-    '<div style="margin-bottom:0.4rem"><span style="color:var(--yellow)">2.</span> NCIIPC is the National Nodal Agency for Critical Information Infrastructure (CII) Protection.</div>'+
-    '<div style="margin-bottom:0.4rem"><span style="color:var(--yellow)">3.</span> The inputs after verification would be shared with the concerned agencies for remediation.</div>'+
-    '<div><span style="color:var(--yellow)">4.</span> We look forward to your continued contribution.</div>'+
-    '</div>'+
-    '<div style="margin-top:0.8rem;font-size:11px;color:var(--yellow);font-weight:700">Thanks &amp; Regards<br>Team RVDP, NCIIPC</div>'+
-    '<div style="position:absolute;bottom:-1px;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--yellow),transparent)"></div>';
-  out.appendChild(letterEl);b();
- 
-  row('out-t2','  NOTE: This was an early independent disclosure — September 2023, pre-platform.');
-  row('out-t2',"  Submitted directly to India's national CII protection body via RVDP.");
-  row('out-t2','  Demonstrates responsible disclosure instincts from the very start.');b();
-  row('out-di','  ════════════════════════════════════════════════════════════════════');b();
-},
-report_bolttech_idor2(){
-  b();row('out-pk','  +-- VULNERABILITY REPORT ------------------------------------------+');b();
-  [['Report ID','BT-IDOR-02','out-t2'],['Severity','P3 / MEDIUM  (CVSS 6.3)','out-ye'],
-   ['Status','ACCEPTED & RESOLVED','out-gr'],['Platform','YesWeHack (Private)','out-bl'],
-   ['Type','IDOR -- User Profile Overwrite','out-pk'],
-  ].forEach(([k,v,c])=>kv(k,v,c));b();
-  row('out-bl','  DESCRIPTION');b();
-  ['A PUT endpoint for updating contact preferences accepted an arbitrary user_id in',
-   'the request body. The server used this value rather than deriving identity from the',
-   'authenticated JWT, allowing any authenticated session to overwrite another user\'s',
-   'notification preferences and contact details.',
-  ].forEach(l=>row('out-t2','  '+l));b();
-  row('out-cy','  CVSS v3.1: AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:H/A:N  -- Score: 6.3');b();
-  row('out-pk','  +--------------------------------------------------------------------+');b();
-},
-report_nasa_xss(){
-  b();row('out-pk','  +-- VULNERABILITY REPORT -- NASA GLOBE ----------------------------+');b();
-  [['Report ID','NASA-XSS-01','out-t2'],['Severity','P2 / HIGH  (CVSS 7.4)','out-pk'],
-   ['Status','VDP Research -- Disclosure Ongoing','out-cy'],
-   ['Target','vis.globe.gov','out-t2'],['Type','Stored XSS via Cross-Subdomain Chain','out-pk'],
-  ].forEach(([k,v,c])=>kv(k,v,c));b();
-  row('out-bl','  ATTACK CHAIN');b();
-  ['1. SaveSearchFilter API stores unsanitized user input server-side',
-   '2. Payload persists in globe_dataentry_authentication cookie domain',
-   '3. document.domain relax() allows subdomain pivot',
-   '4. Stored payload executes in victim\'s browser across subdomain boundary',
-   '5. Session hijack via cookie exfiltration to attacker-controlled server',
-  ].forEach((l,i)=>{
-    const el=document.createElement('span');el.className='out';
-    el.innerHTML='  <span style="color:var(--pink)">['+( i+1)+']</span> <span style="color:var(--text)">'+esc(l)+'</span>';
-    out.appendChild(el);
-  });b();
-  row('out-ye','  NOTE: Initial flag as Self-XSS -- chain extended to demonstrate cross-subdomain impact.');b();
-  row('out-pk','  +--------------------------------------------------------------------+');b();
-},
-report_nasa_enum(){
-  b();row('out-pk','  +-- VULNERABILITY REPORT -- NASA GLOBE ----------------------------+');b();
-  [['Report ID','NASA-ENUM-01','out-t2'],['Severity','P3 / MEDIUM','out-ye'],
-   ['Status','ACKNOWLEDGED -- Hall of Fame','out-gr'],['Target','api.globe.gov','out-t2'],
-   ['Type','Unauthenticated Org/School Enumeration','out-pk'],
-  ].forEach(([k,v,c])=>kv(k,v,c));b();
-  row('out-bl','  DESCRIPTION');b();
-  ["GLOBElookup API exposed school names, org IDs, and measurement site data for all",
-   "50,000+ institutions in NASA's GLOBE program -- without any authentication.",
-   'Three enumeration modes allowed full data extraction via sequential iteration.',
-  ].forEach(l=>row('out-t2','  '+l));b();
-  row('out-gr','  [ok] NASA acknowledged finding -- added to official Hall of Fame.');b();
-  row('out-pk','  +--------------------------------------------------------------------+');b();
-},
-report_csrf(){
-  b();row('out-pk','  +-- VULNERABILITY REPORT -- L\'OCCITANE ----------------------------+');b();
-  [['Report ID','YWH-CSRF-01','out-t2'],['Severity','P3 / MEDIUM  (CVSS 5.4)','out-ye'],
-   ['Status','ACCEPTED','out-gr'],['Platform','YesWeHack (Private)','out-bl'],
-   ['Target','foundation.loccitane.com (Drupal)','out-t2'],
-   ['Type','CSRF via Varnish Cache Token Poisoning','out-pk'],
-  ].forEach(([k,v,c])=>kv(k,v,c));b();
-  row('out-bl','  CHAIN SUMMARY');b();
-  ['Missing SameSite attribute on form submission cookies (OOS alone)',
-   'Varnish caching form tokens for unauthenticated users (OOS alone)',
-  ].forEach((l,i)=>{
-    const el=document.createElement('span');el.className='out';
-    el.innerHTML='  <span style="color:var(--muted)">'+(i+1)+'.</span> <span style="color:var(--text2)">'+esc(l)+'</span>';
-    out.appendChild(el);
-  });b();
-  row('out-t2','  Chained: Varnish serves cached CSRF token to attacker. SameSite=None');
-  row('out-t2','  sends cookie cross-origin. Result: form submission as staff user.');b();
-  row('out-pk','  KEY INSIGHT: Two out-of-scope issues chained = accepted Medium.');b();
-  row('out-pk','  +--------------------------------------------------------------------+');b();
-},
-report_sqli(){
-  b();row('out-pk','  +-- VULNERABILITY REPORT ------------------------------------------+');b();
-  [['Report ID','YWH-SQLI-01','out-t2'],['Severity','CRITICAL  (CVSS 9.8)','out-re'],
-   ['Status','In Triage','out-cy'],['Platform','YesWeHack (Private)','out-bl'],
-   ['Stack','ASP.NET / IIS / MSSQL','out-t2'],
-   ['Type','SQLi -- Authentication Bypass (Boolean-Based)','out-pk'],
-  ].forEach(([k,v,c])=>kv(k,v,c));b();
-  row('out-bl','  DESCRIPTION');b();
-  ['Administrative CMS subdomain discovered via passive recon. The login endpoint',
-   'was vulnerable to boolean-based SQL injection in the authentication query,',
-   'allowing complete bypass of credential validation and unauthenticated access',
-   'to the full administrative interface.',
-  ].forEach(l=>row('out-t2','  '+l));b();
-  row('out-bl','  ATTACK CHAIN');b();
-  [
-    ['01','Subdomain discovery via cert transparency logs + passive DNS'],
-    ['02','Stack fingerprinted: ASP.NET WebForms (ViewState, .aspx, IIS headers)'],
-    ['03','Single-quote probe in UserNameId triggered error -- confirmed unparameterised query'],
-    ['04',"Tautology payload ' OR '1'='1'-- injected into UserNameId"],
-    ['05','HTTP 302 redirect to /CMS/CMSList.aspx -- admin session cookie issued'],
-    ['06','Responsible disclosure submitted to YesWeHack -- currently in triage'],
-  ].forEach(([n,t])=>{
-    const el=document.createElement('span');el.className='out';
-    el.innerHTML='  <span style="color:var(--pink)">['+n+']</span> <span style="color:var(--text)">'+esc(t)+'</span>';
-    out.appendChild(el);
-  });b();
-  row('out-bl','  PROOF OF CONCEPT');b();
-  row('out-di','  +-- POST Request ------------------------------------------------');
-  row('out-gr','  POST /CMS/login.aspx HTTP/2');
-  row('out-gr','  Host: admin.[REDACTED].com');
-  row('out-gr','  Content-Type: application/x-www-form-urlencoded');
-  row('out-gr','  ');
-  row('out-gr',"  UserNameId=' OR '1'='1'--  &PWDId=anything");
-  row('out-di','  +-----------------------------------------------------------------');b();
-  row('out-di','  +-- Response -----------------------------------------------------');
-  row('out-gr','  HTTP/2 302 Found');
-  row('out-gr','  Location: /CMS/CMSList.aspx');
-  row('out-gr','  Set-Cookie: [authenticated session cookie]');
-  row('out-di','  +-----------------------------------------------------------------');b();
-  row('out-bl','  RECONSTRUCTED VULNERABLE QUERY');b();
-  row('out-mu',"  SELECT * FROM Users WHERE UserName = '' OR '1'='1'--' AND Password = 'x'");
-  row('out-t2',"  -- '1'='1' always TRUE -> returns first row (typically admin account)");b();
-  row('out-bl','  KEY NOTE: WHY VIEWSTATE DID NOT PROTECT THIS');b();
-  row('out-t2','  ViewState tokens authenticate form structure -- not field values.');
-  row('out-t2','  The form shape was unchanged; only the value content was modified.');
-  row('out-t2','  A common misconception about ASP.NET built-in protections.');b();
-  row('out-bl','  REMEDIATION');b();
-  row('out-t2','  PRIMARY: Parameterised queries via SqlCommand + SqlParameter (no string concat).');
-  row('out-t2','  SECONDARY: Account lockout, IP allowlist on admin subdomain, DB least-privilege,');
-  row('out-t2','  full audit of all SQL queries in the application for the same pattern.');b();
-  row('out-pk','  +--------------------------------------------------------------------+');b();
-},
-writeup_cors_idor(){
-  b();row('out-cy','  WRITE-UP: Chaining CORS Wildcard + IDOR -- Insurance API (CVSS 8.1)');b();
-  row('out-mu','  Platform: YesWeHack  ·  Program: Private  ·  Severity: HIGH');b();
-  row('out-bl','  ATTACK FLOW');b();
-  ['Identify CORS wildcard via OPTIONS preflight',
-   'Confirm credentials:include still sent despite wildcard',
-   'Locate policy_id param -- no owner verification',
-   'Host malicious JS page with cross-origin fetch',
-   'Victim visits page -> browser sends credentialed request',
-   'Server reflects wildcard -> browser permits response read',
-   "Attacker JS reads victim's policy data + PII",
-  ].forEach((s,i)=>{
-    const el=document.createElement('span');el.className='out';
-    el.innerHTML='  <span style="color:var(--pink)">['+String(i+1).padStart(2,'0')+']</span> <span style="color:var(--text)">'+esc(s)+'</span>';
-    out.appendChild(el);
-  });b();
-},
-writeup_xss(){
-  b();row('out-cy','  WRITE-UP: Self-XSS -> Cross-Subdomain Session Hijack -- NASA GLOBE');b();
-  row('out-t2',"  The chain: dismissed P5 Self-XSS -> Stored XSS -> cross-subdomain cookie");
-  row('out-t2','  exfiltration using document.domain relax and an exposed auth cookie.');b();
-  row('out-bl','  KEY LESSON');b();
-  row('out-t2',"  Self-XSS is only \"no impact\" if the payload stays in the attacker's session.");
-  row('out-t2','  If the data is stored server-side and served to others, it\'s stored XSS.');b();
-},
-writeup_csrf(){
-  b();row('out-cy','  WRITE-UP: CSRF via Varnish Cache Poisoning -- Two OOS Issues Chained');b();
-  row('out-bl','  KEY LESSON');b();
-  row('out-t2','  Scope rules describe individual bugs -- not attack chains. When two OOS');
-  row('out-t2','  findings share a data path, ask: "combined impact?"');b();
-},
-writeup_api(){
-  b();row('out-cy','  WRITE-UP: Enumerating 50,000+ Schools -- Unauthenticated NASA API');b();
-  row('out-t2','  GLOBElookup had three modes, none requiring auth. A loop over org IDs');
-  row('out-t2','  returned school names, coordinates, and site data for every institution.');b();
-  row('out-bl','  IMPACT');b();
-  row('out-t2','  Privacy exposure for school admins. NASA acknowledged: Hall of Fame.');b();
-},
-tool_recon(){
-  b();row('out-mu','  #!/usr/bin/env bash');row('out-mu','  # recon-suite.sh -- Avyash recon framework');b();
-  ['TARGET=$1','OUTDIR="./recon/$TARGET"','mkdir -p "$OUTDIR"','',
-   '# Subdomain enum','subfinder -d "$TARGET" -silent -o "$OUTDIR/subs.txt"',
-   'amass enum -passive -d "$TARGET" >> "$OUTDIR/subs.txt"','',
-   '# Live hosts','httpx -l "$OUTDIR/subs.txt" -status-code -tech-detect -o "$OUTDIR/live.txt"','',
-   '# JS mining','katana -u "$TARGET" -jc -silent | grep ".js" > "$OUTDIR/js.txt"',
-   'cat "$OUTDIR/js.txt" | linkfinder -i - -o cli > "$OUTDIR/endpoints.txt"','',
-   '# Nuclei','nuclei -l "$OUTDIR/live.txt" -t exposures/ -t misconfigurations/ -o "$OUTDIR/nuclei.txt"',
-   'echo "[done] $OUTDIR"',
-  ].forEach(l=>{if(!l)b();else row(l.startsWith('#')?'out-mu':'out-gr','  '+l);});b();
-},
-tool_idor(){
-  b();row('out-mu','  # idor-scanner.py');b();
-  ['import requests, sys','TARGET = sys.argv[1]','TOKEN  = sys.argv[2]','RANGE  = range(10000, 10200)','',
-   'headers = {"Authorization": f"Bearer {TOKEN}"}','',
-   'for uid in RANGE:','    url = TARGET.replace("{id}", str(uid))',
-   '    r = requests.get(url, headers=headers)',
-   '    if r.status_code == 200:','        print(f"[HIT] {uid} | {r.text[:80]}")',
-  ].forEach(l=>{if(!l)b();else row('out-pu','  '+l);});b();
-},
-tool_cors(){b();row('out-mu','  # cors-checker.py');b();row('out-t2','  Tests: wildcard+credentials, origin reflection, null origin, subdomain bypass');b();},
-wordlist_api(){b();row('out-mu','  /api/v1/  /api/v2/  /api/admin/  /internal/  /graphql  /api/users ...');row('out-di','  [2,847 entries]');b();},
-wordlist_params(){b();row('out-mu','  id  user_id  account_id  policy_id  doc_id  order_id ...');row('out-di','  [1,204 entries]');b();},
-wordlist_sub(){b();row('out-mu','  api  staging  admin  dev  beta  internal  vpn  mail ...');row('out-di','  [5,000 entries]');b();},
-cert_ejpt(){
-  b();row('out-ye','  [CERT] eJPT -- eLearnSecurity Junior Penetration Tester');b();
-  kv('Issuer','INE Security (eLearnSecurity)','out-t2');kv('Year','2024','out-t2');kv('Status','ACTIVE','out-gr');b();
-  row('out-t2','  Penetration testing methodology, network scanning, exploitation, web app basics.');b();
-},
-cert_pnpt(){
-  b();row('out-ye','  [CERT] PNPT -- Practical Network Penetration Tester');b();
-  kv('Issuer','TCM Security','out-t2');kv('Year','2024','out-t2');kv('Status','ACTIVE','out-gr');b();
-  row('out-t2','  Active Directory attacks, external/internal pentest, OSINT, 5-day practical exam.');b();
-},
-cert_sec(){
-  b();row('out-ye','  [CERT] CompTIA Security+');b();
-  kv('Issuer','CompTIA','out-t2');kv('Year','2023','out-t2');kv('Status','ACTIVE','out-gr');b();
-  row('out-t2','  Threat detection, network security, cryptography, compliance, incident response.');b();
-},
-cert_progress(){
-  b();row('out-ye','  CERTIFICATIONS IN PROGRESS');b();
-  [['OSCP','Offensive Security Certified Professional',60,'var(--pink)'],
-   ['CEH','Certified Ethical Hacker (EC-Council)',30,'var(--blue)'],
-  ].forEach(([code,name,pct,col])=>{
-    b();
-    const hdr=row('','  '+code+' -- '+name);hdr.style.color=col;
-    skillBar(code,pct,col);b();
-  });
-},
+  /* ---------- interactive terminal ---------- */
+  const body=document.getElementById('termBody');
+  const PS='<span class="ps"><span class="u">avyash</span>@portfolio<span class="p">:~$</span></span>';
+  let flagFound=false;
+  const commands={
+    help(){return ['available commands:',
+      '  <span class="t-acc">whoami</span>        who is this',
+      '  <span class="t-acc">summary</span>       professional summary',
+      '  <span class="t-acc">experience</span>    work history',
+      '  <span class="t-acc">reports</span>       disclosure write-ups',
+      '  <span class="t-acc">resume</span>        download CV (pdf)',
+      '  <span class="t-acc">method</span>        engagement methodology',
+      '  <span class="t-acc">skills</span>        tooling &amp; techniques',
+      '  <span class="t-acc">certs</span>         certifications',
+      '  <span class="t-acc">education</span>     academic background',
+      '  <span class="t-acc">recon</span>         run a recon sweep',
+      '  <span class="t-acc">contact</span>       how to reach me',
+      '  <span class="t-acc">ls -la</span>        list files (look closely...)',
+      '  <span class="t-acc">clear</span>         clear the screen',
+    ];},
+    whoami(){return ['<span class="t-key">Avyash Rayamajhi</span> — Penetration Tester &amp; Bug Bounty Hunter','Newcastle, NSW, Australia','3+ years offensive security · OSCP candidate','Active on <span class="t-ok">Bugcrowd · YesWeHack · Yogosha</span> (authorised programs only).'];},
+    summary(){return ['Results-driven cybersecurity professional specialising in web, API,','network, and mobile penetration testing. Full engagement lifecycle —','recon, exploitation, and <span class="t-key">CVSS-scored reporting</span> for exec &amp; tech','audiences. Governance-aware: <span class="t-ok">ISO 27001</span>, <span class="t-ok">ASD Essential Eight</span>,','OWASP, PTES, NIST CSF.'];},
+    experience(){return ['<span class="t-acc">[ Penetration Tester ]</span> @ Edxplor  <span class="t-dim">jul 2024 — present</span>','  ▹ black/grey/white-box web, API &amp; mobile testing','  ▹ REST + GraphQL · OWASP API Top 10 · WAF bypass','  ▹ high &amp; critical bug bounty findings, responsible disclosure','  ▹ custom Python/Bash recon — 40% less manual overhead','','<span class="t-acc">[ Cyber Security Associate ]</span> @ Greentick  <span class="t-dim">apr 2023 — may 2024</span>','  ▹ end-to-end VA/PT across web, network &amp; infra','  ▹ threat modeling, authorised red team recon','  ▹ security controls, log pipelines, IDS rules'];},
+    method(){return ['engagement methodology (authorised only):','  01 scoping &amp; rules of engagement','  02 reconnaissance &amp; enumeration','  03 vulnerability analysis','  04 exploitation — proof of impact','  05 post-exploitation within scope','  06 CVSS-scored reporting &amp; remediation','<span class="t-dim">→ see the interactive kill-chain section above</span>'];},
+    reports(){return ['<span class="t-dim">sanitised disclosure write-ups (authorised engagements):</span>',
+      '<span class="t-err">[CRIT]</span> <a href="reports/AVR-2025-0017-auth-bypass.html" style="color:var(--accent-2)">AVR-2025-0017</a> JWT auth bypass / account takeover',
+      '<span class="t-err">[CRIT]</span> <a href="reports/AVR-2024-0142-sql-injection.html" style="color:var(--accent-2)">AVR-2024-0142</a> Union-based SQL injection',
+      '<span class="t-err">[CRIT]</span> <a href="reports/AVR-2024-0203-privilege-escalation.html" style="color:var(--accent-2)">AVR-2024-0203</a> Privilege escalation (mass assignment)',
+      '<span class="t-warn">[HIGH]</span> <a href="reports/AVR-2024-0188-idor.html" style="color:var(--accent-2)">AVR-2024-0188</a> IDOR / BOLA — tenant PII',
+      '<span class="t-warn">[HIGH]</span> <a href="reports/AVR-2024-0231-pii-exposure.html" style="color:var(--accent-2)">AVR-2024-0231</a> Unauthenticated PII exposure',
+      '<span class="t-acc">[MED ]</span> <a href="reports/AVR-2025-0044-race-condition.html" style="color:var(--accent-2)">AVR-2025-0044</a> Promo race condition (TOCTOU)',
+      '<span class="t-dim">→ full archive:</span> <a href="reports/index.html" style="color:var(--accent-2)">reports/</a>'];},
+    resume(){return ['<span class="t-ok">↓ downloading</span> Avyash_Rayamajhi_Resume.pdf ...','<span class="t-dim">if it does not start,</span> <a href="assets/Avyash_Rayamajhi_Resume.pdf" download style="color:var(--accent-2)">click here</a>'];},
+    skills(){return ['<span class="t-key">offensive</span>  web · api · network · mobile pentest, red team, bug bounty','<span class="t-key">tools</span>      burp suite, nmap, metasploit, sqlmap, wireshark, nessus','<span class="t-key">systems</span>    linux/kali, active directory, windows server','<span class="t-key">scripting</span>  python, bash, powershell','<span class="t-key">standards</span>  owasp top 10, owasp api top 10, cvss, iso 27001, ptes'];},
+    certs(){return ['<span class="t-warn">▸</span> OSCP — Offensive Security <span class="t-dim">(in progress)</span>','<span class="t-ok">▸</span> Penetration Tester Level 2 — Hack The Box (Dante)','<span class="t-ok">▸</span> Pre Security Learning Path — TryHackMe','<span class="t-ok">▸</span> General Linux Administration — Linux Foundation','<span class="t-ok">▸</span> CSI Linux Certified Investigator (CSIL-CI)'];},
+    education(){return ['B.Sc. Information Management','  — Computer &amp; Information Systems Security','Shanker Dev Campus, Kathmandu, Nepal  <span class="t-dim">2018 — 2022</span>'];},
+    contact(){return ['email    <span class="t-ok"><a href="mailto:rayamajhi.avyash@gmail.com" style="color:var(--accent-2)">rayamajhi.avyash@gmail.com</a></span>','linkedin <span class="t-ok"><a href="https://linkedin.com/in/avyashrayamajhi" target="_blank" rel="noopener" style="color:var(--accent-2)">in/avyashrayamajhi</a></span>','status   open to roles &amp; authorised engagements'];},
+    recon(){return ['<span class="t-dim">$ nmap -sV -T4 avyash.profile</span>','PORT     STATE  SERVICE     VERSION','22/tcp   open   curiosity   always-learning 9.0','80/tcp   open   web-pentest OWASP/Top10','443/tcp  open   api-pentest GraphQL+REST','1337/tcp open   bug-bounty  responsible-disclosure','<span class="t-ok">scan complete — 0 false positives</span>'];},
+    sudo(){return ['<span class="t-err">avyash is not in the sudoers file. This incident will be reported. 🙂</span>'];},
+    exit(){return ['<span class="t-dim">nice try — there is no escape from the portfolio.</span>'];},
+    cat(arg){
+      if(arg && arg.replace('./','')==='.flag'){
+        if(!flagFound){flagFound=true;toast('🚩 <span class="tk">flag captured!</span> nice find. now run <span class="tk">submit</span>');}
+        return ['<span class="t-acc">FLAG{r3sp0ns1bl3_d1scl0sur3_w1ns}</span>','<span class="t-dim"># well done. type</span> <span class="t-acc">submit</span> <span class="t-dim">to log your find.</span>'];
+      }
+      if(arg) return ['<span class="t-err">cat: '+arg.replace(/</g,'&lt;')+': No such file or directory</span>'];
+      return ['<span class="t-dim">usage: cat &lt;file&gt;</span>'];
+    },
+    submit(){
+      if(flagFound) return ['<span class="t-ok">✓ flag accepted.</span> If you got here, we should talk —','drop me a line: <span class="t-ok"><a href="mailto:rayamajhi.avyash@gmail.com?subject=I%20found%20the%20flag" style="color:var(--accent-2)">rayamajhi.avyash@gmail.com</a></span>'];
+      return ['<span class="t-warn">no flag in scope yet. hint: hidden files start with a dot. try</span> <span class="t-acc">ls -la</span>'];
+    }
   };
-  if(C[key]){C[key]();scrollBot();}
-  else row('out-re','  [content not found: '+key+']');
-}
+  const aliases={certifications:'certs',exp:'experience',about:'whoami',skill:'skills',edu:'education',cls:'clear','?':'help',methodology:'method'};
+  const cmdNames=Object.keys(commands).concat(['clear']);
 
-// ── README PANEL ─────────────────────────────────────────────────────────────
-function buildReadme(){
-  const rb=document.getElementById('readme-body');
-  if(rb.innerHTML) return; // already built
-  rb.innerHTML=`
-    <span class="rm-h1">&#9698; Avyash Rayamajhi</span>
-    <span class="rm-p">Penetration Tester &amp; Security Researcher based in Newcastle, NSW, Australia.</span>
-    <span class="rm-p">This terminal portfolio is navigable like a real Unix shell.</span>
-    <span class="rm-div"></span>
-
-    <span class="rm-h2">&#9655; QUICK NAVIGATION</span>
-    <div style="display:flex;flex-wrap:wrap;gap:0.35rem;margin-bottom:0.5rem">
-      <code class="rm-cmd">whoami</code>
-      <code class="rm-cmd">ls</code>
-      <code class="rm-cmd">cd reports</code>
-      <code class="rm-cmd">skills</code>
-      <code class="rm-cmd">stats</code>
-      <code class="rm-cmd">timeline</code>
-      <code class="rm-cmd">contact</code>
-      <code class="rm-cmd">recon &lt;target&gt;</code>
-      <code class="rm-cmd">nmap</code>
-      <code class="rm-cmd">burp</code>
-      <code class="rm-cmd">sudo hire avyash</code>
-    </div>
-    <span class="rm-div"></span>
-
-    <span class="rm-h2">&#9655; ACCEPTED FINDINGS</span>
-    <div class="rm-finding rm-finding-crit">
-      <span class="rm-finding-title">CMS SQLi — Auth Bypass &nbsp; CVSS 9.8</span>
-      <span style="color:var(--text2);font-size:10px">YesWeHack Private &nbsp;·&nbsp; ASP.NET/MSSQL &nbsp;·&nbsp; In Triage</span>
-    </div>
-    <div class="rm-finding rm-finding-high">
-      <span class="rm-finding-title">CORS + IDOR Chain — Insurance API &nbsp; CVSS 8.1</span>
-      <span style="color:var(--text2);font-size:10px">YesWeHack Private &nbsp;·&nbsp; PII exfiltration via cross-origin fetch</span>
-    </div>
-    <div class="rm-finding rm-finding-high">
-      <span class="rm-finding-title">Stored XSS — NASA GLOBE &nbsp; CVSS 7.4</span>
-      <span style="color:var(--text2);font-size:10px">NASA VDP &nbsp;·&nbsp; Cross-subdomain session hijack chain</span>
-    </div>
-    <div class="rm-finding rm-finding-med">
-      <span class="rm-finding-title">IDOR &times;2 — Bolttech ADBX &nbsp; CVSS 6.5 / 6.3</span>
-      <span style="color:var(--text2);font-size:10px">YesWeHack Private &nbsp;·&nbsp; Policy doc + profile overwrite &nbsp;·&nbsp; Accepted</span>
-    </div>
-    <div class="rm-finding rm-finding-med">
-      <span class="rm-finding-title">CSRF via Cache Poisoning — L'Occitane &nbsp; CVSS 5.4</span>
-      <span style="color:var(--text2);font-size:10px">YesWeHack Private &nbsp;·&nbsp; Two OOS issues chained &nbsp;·&nbsp; Accepted</span>
-    </div>
-    <div class="rm-finding rm-finding-info">
-      <span class="rm-finding-title">Unauthenticated Enumeration — NASA GLOBE</span>
-      <span style="color:var(--text2);font-size:10px">NASA VDP &nbsp;·&nbsp; 50,000+ orgs &nbsp;·&nbsp; Hall of Fame</span>
-    </div>
-    <span class="rm-div"></span>
-
-    <span class="rm-h2">&#9655; TECH STACK</span>
-    <div style="display:flex;flex-wrap:wrap;gap:0.3rem;margin-bottom:0.5rem">
-      <span class="rm-tag rm-tag-pk">Burp Suite Pro</span>
-      <span class="rm-tag rm-tag-pk">IDOR / BOLA</span>
-      <span class="rm-tag rm-tag-pk">Auth Bypass</span>
-      <span class="rm-tag rm-tag-pk">SQLi</span>
-      <span class="rm-tag rm-tag-bl">Nuclei</span>
-      <span class="rm-tag rm-tag-bl">Amass</span>
-      <span class="rm-tag rm-tag-bl">Subfinder</span>
-      <span class="rm-tag rm-tag-bl">httpx</span>
-      <span class="rm-tag rm-tag-pu">Python</span>
-      <span class="rm-tag rm-tag-pu">Bash</span>
-      <span class="rm-tag rm-tag-ye">PNPT</span>
-      <span class="rm-tag rm-tag-ye">eJPT</span>
-      <span class="rm-tag rm-tag-ye">Security+</span>
-      <span class="rm-tag rm-tag-gr">YesWeHack</span>
-      <span class="rm-tag rm-tag-gr">Bugcrowd</span>
-      <span class="rm-tag rm-tag-gr">NASA VDP</span>
-    </div>
-    <span class="rm-div"></span>
-
-    <span class="rm-h2">&#9655; IDENTITY</span>
-    <div class="rm-kv"><span class="rm-key">Location</span><span class="rm-val">Newcastle, NSW, Australia</span></div>
-    <div class="rm-kv"><span class="rm-key">Focus</span><span class="rm-val">Web App &nbsp;·&nbsp; API &nbsp;·&nbsp; Auth &nbsp;·&nbsp; Logic Flaws</span></div>
-    <div class="rm-kv"><span class="rm-key">Status</span><span class="rm-val" style="color:var(--green)">&#9679; Available for engagements</span></div>
-    <div class="rm-kv"><span class="rm-key">Off-screen</span><span class="rm-val">&#x26F0; Trekking &nbsp; &#127928; Guitar &nbsp; &#9917; Football</span></div>
-    <span class="rm-div"></span>
-
-    <span class="rm-h2">&#9655; CONTACT</span>
-    <div class="rm-kv"><span class="rm-key">Email</span><span class="rm-val" style="color:var(--pink)">rayamajhi.avyash@gmail.com</span></div>
-    <div class="rm-kv"><span class="rm-key">LinkedIn</span><span class="rm-val"><a href="https://linkedin.com/in/avyash-rayamajhi" target="_blank" style="color:var(--blue);text-decoration:none">linkedin.com/in/avyash-rayamajhi</a></span></div>
-    <div class="rm-kv"><span class="rm-key">GitHub</span><span class="rm-val"><a href="https://github.com/avyash" target="_blank" style="color:var(--purple);text-decoration:none">github.com/avyash</a></span></div>
-    <div class="rm-kv"><span class="rm-key">Bugcrowd</span><span class="rm-val"><a href="https://bugcrowd.com/Avyash_Rayamajhi" target="_blank" style="color:var(--yellow);text-decoration:none">bugcrowd.com/Avyash_Rayamajhi</a></span></div>
-    <span style="display:block;margin-top:1rem;font-size:10px;color:var(--muted)">
-      Or just type <code class="rm-cmd">sudo hire avyash</code> in the terminal.
-    </span>
-  `;
-}
-
-function toggleReadme(){
-  const panel=document.getElementById('readme-panel');
-  const overlay=document.getElementById('readme-overlay');
-  const btn=document.getElementById('readme-btn');
-  const isOpen=panel.classList.contains('open');
-  if(!isOpen){
-    buildReadme();
-    panel.classList.add('open');
-    overlay.classList.add('open');
-    btn.classList.add('active');
-    btn.textContent='&#x2715; close';
-  } else {
-    panel.classList.remove('open');
-    overlay.classList.remove('open');
-    btn.classList.remove('active');
-    btn.textContent='README.md';
+  function scrollBottom(){body.scrollTop=body.scrollHeight;}
+  function printLines(arr){arr.forEach(l=>{const d=document.createElement('div');d.className='t-line t-out';d.innerHTML=l===''?'&nbsp;':l;body.appendChild(d);});}
+  function echoCmd(c){const d=document.createElement('div');d.className='t-line';d.innerHTML=PS+' <span class="t-cmd">'+c.replace(/</g,'&lt;')+'</span>';body.appendChild(d);}
+  let started=false;
+  function newPrompt(){
+    const row=document.createElement('div');row.className='input-row';
+    row.innerHTML='<span class="ps"><span class="u">avyash</span>@portfolio<span class="p">:~$</span></span>';
+    const inp=document.createElement('input');inp.id='cmd';inp.autocomplete='off';inp.spellcheck=false;inp.setAttribute('aria-label','terminal command input');
+    row.appendChild(inp);body.appendChild(row);inp.focus({preventScroll:true});if(started)scrollBottom();return inp;
   }
-}
-
-function completions(){
-  const node=FS[cwd];
-  const children=node?node.children:[];
-  return [...Object.keys(CMD),'help','clear','pwd',...children];
-}
-
-inp.addEventListener('keydown',e=>{
-  if(e.key==='Enter'){
-    const raw=inp.value.trim();inp.value='';if(!raw)return;
-    hist.unshift(raw);histIdx=-1;
-    printPromptLine(raw);exec(raw);scrollBot();
-  }else if(e.key==='ArrowUp'){
-    e.preventDefault();
-    if(histIdx<hist.length-1){histIdx++;inp.value=hist[histIdx];}
-  }else if(e.key==='ArrowDown'){
-    e.preventDefault();
-    if(histIdx>0){histIdx--;inp.value=hist[histIdx];}else{histIdx=-1;inp.value='';}
-  }else if(e.key==='Tab'){
-    e.preventDefault();
-    const parts=inp.value.split(' ');const last=parts[parts.length-1];
-    const hits=completions().filter(c=>c.startsWith(last));
-    if(hits.length===1){parts[parts.length-1]=hits[0];inp.value=parts.join(' ');}
-    else if(hits.length>1){b();row('out-t2','  '+hits.join('   '));scrollBot();}
-  }else if(e.ctrlKey&&e.key==='l'){e.preventDefault();CMD.clear();}
-  else if(e.ctrlKey&&e.key==='c'){
-    inp.value='';
-    const el=document.createElement('div');el.className='line-prompt';
-    el.innerHTML='<span class="lp-user">avyash</span><span class="lp-at">@</span><span class="lp-host">pentest</span><span class="lp-colon">:</span><span class="lp-path">'+esc(cwd)+'</span><span class="lp-dollar"> $ </span><span class="lp-cmd">^C</span>';
-    out.appendChild(el);scrollBot();
+  const history=[];let hpos=-1;
+  function run(raw){
+    started=true; const c=raw.trim(); echoCmd(c);
+    if(c){history.push(c);hpos=history.length;}
+    const parts=c.split(/\s+/); let key=(parts[0]||'').toLowerCase(); const arg=parts.slice(1).join(' ');
+    key=aliases[key]||key;
+    if(key==='clear'){body.innerHTML='';}
+    else if(key===''){/* noop */}
+    else if(key==='ls'){
+      if(/(^|\s)-la?\b|(^|\s)-al?\b/.test(c)){printLines(['drwxr-xr-x  avyash  summary  experience  skills  certs','drwxr-xr-x  avyash  <a href="reports/index.html" style="color:var(--accent-2)">reports/</a>  method  education  contact','-rw-r--r--  avyash  <a href="assets/Avyash_Rayamajhi_Resume.pdf" download style="color:var(--accent-2)">resume.pdf</a>','-rw-------  avyash  <span class="t-acc">.flag</span>  <span class="t-dim"># hmm, a hidden file. try: cat .flag</span>','']);}
+      else {printLines(['reports/  summary  experience  skills  certs  education  contact  resume.pdf','']);}
+    }
+    else if(key==='cat'){printLines(commands.cat(arg));printLines(['']);}
+    else if(commands[key]){printLines(commands[key]());printLines(['']);
+      if(key==='resume'){const a=document.createElement('a');a.href='assets/Avyash_Rayamajhi_Resume.pdf';a.download='Avyash_Rayamajhi_Resume.pdf';document.body.appendChild(a);a.click();a.remove();}
+    }
+    else {printLines(['<span class="t-err">command not found: '+c.replace(/</g,'&lt;')+'</span>','type <span class="t-acc">help</span> for options','']);}
+    const inp=newPrompt();bind(inp);
   }
-});
-document.addEventListener('click',()=>inp.focus());
-document.addEventListener('keydown',e=>{if(document.activeElement!==inp&&e.key.length===1&&!e.ctrlKey&&!e.metaKey)inp.focus();});
-
-function exec(raw){
-  const parts=raw.trim().split(/\s+/);
-  const cmd=parts[0].toLowerCase();
-  const args=parts.slice(1);
-  // Easter egg: sudo hire avyash
-  if(cmd==='sudo'&&args[0]==='hire'&&args[1]==='avyash'){
-    b();
-    row('out-gr','  [sudo] Verifying credentials...');
-    setTimeout(()=>{
-      row('out-gr','  [sudo] Access granted.');
-      b();
-      const el=document.createElement('span');el.className='out';
-      el.innerHTML='  <span style="color:var(--green);font-weight:700;font-size:14px;text-shadow:0 0 20px var(--green)">HIRE REQUEST APPROVED.</span>  <span style="color:var(--text2)">Redirecting to contact...</span>';
-      out.appendChild(el);
-      b();
-      setTimeout(()=>{CMD.contact();scrollBot();},800);
-    },1200);
-    scrollBot();return;
+  function bind(inp){
+    inp.addEventListener('keydown',e=>{
+      if(e.key==='Enter'){e.preventDefault();const v=inp.value;inp.disabled=true;inp.removeAttribute('id');run(v);}
+      else if(e.key==='ArrowUp'){e.preventDefault();if(hpos>0){hpos--;inp.value=history[hpos]||'';}}
+      else if(e.key==='ArrowDown'){e.preventDefault();if(hpos<history.length-1){hpos++;inp.value=history[hpos]||'';}else{hpos=history.length;inp.value='';}}
+      else if(e.key==='Tab'){e.preventDefault();const p=inp.value.trim().toLowerCase();const m=cmdNames.filter(n=>n.startsWith(p));if(m.length===1)inp.value=m[0];}
+    });
   }
-  if(CMD[cmd])CMD[cmd](args);
-  else{row('out-re','  bash: '+esc(cmd)+': command not found');row('out-t2','  Type  help  for available commands.');}
-  scrollBot();
-}
+  bind(newPrompt());
+  body.addEventListener('click',()=>{const a=document.getElementById('cmd');if(a)a.focus();});
+
+  const quick=document.getElementById('quick');
+  ['help','whoami','experience','reports','resume','skills','recon','contact'].forEach(c=>{
+    const b=document.createElement('button');b.className='qc';b.textContent=c;
+    b.addEventListener('click',()=>{const inp=document.getElementById('cmd');if(inp){inp.disabled=true;inp.removeAttribute('id');}document.getElementById('terminal').scrollIntoView({behavior:'smooth',block:'center'});run(c);});
+    quick.appendChild(b);
+  });
+
+  /* ---------- konami easter egg ---------- */
+  const seq=['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+  let ki=0;
+  window.addEventListener('keydown',e=>{
+    const k=e.key.length===1?e.key.toLowerCase():e.key;
+    ki=(k===seq[ki])?ki+1:(k===seq[0]?1:0);
+    if(ki===seq.length){ki=0;document.body.style.transition='filter .4s';document.body.style.filter='hue-rotate(180deg)';
+      toast('🕹️ <span class="tk">root access granted.</span> (kidding — just a theme flip)');
+      setTimeout(()=>document.body.style.filter='',2600);}
+  });
+})();
 </script>
 </body>
 </html>
